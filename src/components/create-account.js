@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {BrowserRouter as Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {reduxForm, Field} from 'redux-form';
 
 function Header() {

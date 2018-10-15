@@ -1,11 +1,11 @@
 
 import React from 'react';
-import {BrowserRouter as router} from 'react-router-dom';
+import {Route} from 'react-router-dom';  // use this.props.history instead
 import {reduxForm, Field} from 'redux-form';
 
 function ConversationSection(props) {
     function sendMessage(values) {
-        
+        /** Do this here or in ConversationBoard? this.props.dispatch either way. */
     }
     return (
         <section class="conversation-section">
@@ -30,6 +30,14 @@ ConversationSection.PropType = {
 class ConversationBoard extends React.Component {
     constructor(props) {
         super(props);
+    }
+
+    sendMessage(values) {
+        return "";  /** Do this here or in Section? this.props.dispatch either way. */
+    }
+
+    exitConversation() {
+        this.props.history() /**redirect route through history here */
     }
 
     render() {
