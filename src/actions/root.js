@@ -55,20 +55,21 @@ export const displayError = status => ({
 
 export const DISPLAY_AVAILABLE_CONVERSATION_LIST = `DISPLAY_AVAILABLE_CONVERSATION_LIST`;
 export const displayAvailableConversationList = (conversationList) => ({
+    route : '/home',
     type : DISPLAY_AVAILABLE_CONVERSATION_LIST,
     conversationList
 });
 
 // factory functions
 
-export const checkConversationAvailability = (conversationId) => {
+export const checkConversationAvailability = (conversationId, userId) => {
     // !!!! make a POST fetch request to the server to see if conversationId still has status 'available' = true;
     return Promise.resolve(TEMP_CONVERSATION_AVAILABILITY_STATUS);
 }
 // make a fetch(POST) the conversation has found a 2nd member too
 
 export const prepareConversation = (availableConversationData) => dispatch => {
-    // availableConversationData should have conversationId, userHostId, topicId, topicName.
+    // availableConversationData should have conversationId, convoUserId, topicId, topicName.
     dipsatch(displayLoading());
     /* for when asynchonous calls are brought in.
     checkConversationAvailability(availableConversationData.conversationId)

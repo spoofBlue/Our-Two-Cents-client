@@ -1,12 +1,14 @@
 
 // Libraries
 import React from 'react';
+import {connect} from 'react-redux';
 import {Link, Redirect} from 'react-router-dom';
 
 // Actions
 import {prepareConversation, getAvailableConversationsList} from '../actions/root'
 
 // Components
+import AvailableConversation from './available-conversation';
 import ErrorNotification from './error-notification';
 
 export class AvailableConversationList extends React.Component {
@@ -15,7 +17,7 @@ export class AvailableConversationList extends React.Component {
     }
 
     startConversation(availableConversationData) {
-        console.log(this.props);  // availableConversationData has conversationId, userHostId, topicId, topicName
+        console.log(this.props);  // availableConversationData has conversationId, convoUserId, topicId, topicName
         this.props.disptach(prepareConversation(availableConversationData));
     }
     
@@ -48,29 +50,13 @@ export class AvailableConversationList extends React.Component {
     }
 }
 
-export function AvailableConvesation(props) {
-    function onClick() {
-        const openedAvailableConversationData = {conversationId : this.props.conversationId, userHostId: this.props.userHostId, topicId : this.props.topicId, topicName : this.props.topicName };
-        this.props.startConversation(openedAvailableConversationData);
-    }
+const mapStateToProps = state => ({
+    route : state.route,
+    conversationList : state.conversationList,
+    conversationData : state.conversationData,
+    userId : state.userId,
+    loading : state.loading,
+    error : state.error
+});
 
-    return (
-        <li class="available-conversation-item" conversationId={this.props.conversationId} userHostId={this.props.userHostId} index={this.props.index}>
-            <h3 class="topic" topicId={this.props.topicId}>{this.props.topicName}</h3>
-            <p class="viewpoint">{this.props.viewpoint}</p>
-            <button class="start-conversation-button" onClick={onClick()}>Start Conversation</button>
-        </li>
-    );
-}
-
-/*
-// This is decidedly not essential for functionality. Basically the section would have the 2nd person who joined (you) to wait for the 1st person to confirm they're nearby. Again, not a necessity.
-function WaitingSection(props) {
-    return (
-        <section class="waiting-for-other-person-section">
-            <h3 class="waiting-text">Notifying the other person to begin your conversation on {props.topicName}. Your chat will open shortly.</h3>
-            <button class="cancel-conversation-button" onClick={props.onCancelWaitingSection}>Cancel</button>
-        </section>
-    );
-}
-*/
+export default connect(mapStateToProps)(AvailableConversationList);
