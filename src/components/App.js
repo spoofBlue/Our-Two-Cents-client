@@ -1,10 +1,9 @@
 
 import React from 'react';
 import {withRouter, Route, Switch} from 'react-router-dom';
-import {connect} from 'react-redux';
+import {connect, Provider} from 'react-redux';
 import {refreshAuthToken} from '../actions/auth';
-import {Provider} from 'react-redux';
-import {homeStore, createConversationStore, conversationStore} from './appStore';
+import {conversationStore} from './store';
 
 import LandingPageSection from './landing-page';
 import LoginSection from './login';
