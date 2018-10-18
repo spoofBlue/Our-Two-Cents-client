@@ -1,70 +1,56 @@
 
+// Libraries
 import React from 'react';
-import {Link} from 'react-router-dom';
-import {reduxForm, Field} from 'redux-form';
+import {reduxForm, Field, focus} from 'redux-form';
 
-function Header() {
-    return (
-        <header role="header">
-            <h1>Our Two Cents</h1>
-            <Link to="./main-page.html">Home (icon link)</Link>
-            <Link to="./landing-page.html">About Our Site (icon link)</Link>
-        </header>
-    );
-}
-function CreateAccountSection() {
-    return (
-        <section class="create-account-section">
-            <h2>Create your Account</h2>
-            <CreateAccountForm />
-        </section>
-    );  
-}
+// Actions
+import {login} from '../actions/auth';
+import {registerUser} from '../actions/users';
 
-class CreateAccountForm extends React.Component {
+// Component
+import ErrorNotification from './error-notification';
+
+// Validators
+import {required, nonEmpty, length, isTrimmed} from '../validators';
+const passwordLength = length({min: 10, max: 72});
+
+export class CreateAccountForm extends React.Component {
     onSubmit(values) {
         console.log(values);
-        const {email, password} = values;
+        const {firstName, lastName, email, password} = values;
         // this.props.dispatch(to an registerUser fetch(POST))
+        // return this.props.dispatch(registerUser(user))
+        // .then(() => this.props.dispatch(login(username, password)));
         // Login component
     }
 
     render() {
         let error;
         if (this.props.error) {
-            error = (<Error text={...this.props.error} />);
+            error = (<ErrorNotification {...this.props.error} />);
         }
         return(
             <form id="create-account-form" role="form" onSubmit={this.props.handleSubmit(values => this.onSubmit(values))}>
                 {error}
+                <label htmlFor="firstName">First Name:</label>
+                <Field name="firstName" id="create-account-first-name" placeholder="Bob" validate={[required, nonEmpty]} component="input" />
+                <label htmlFor="lastName">Last Name:</label>
+                <Field name="lastName" id="create-account-last-name" placeholder="Smith" validate={[required, nonEmpty]} component="input" />
                 <label htmlFor="email">E-mail:</label>
-                <Field name="email" type="text" id="create-account-email" placeholder="BobSmith@email.com" component="input" required />
+                <Field name="email" type="email" id="create-account-email" placeholder="BobSmith@email.com" validate={[required, nonEmpty, isTrimmed]} component="input" />
                 <label htmlFor="password">Password:</label>
-                <Field name="password" type="password" id="create-account-password" placeholder="minimum 10 characters" component="input" required />
+                <Field name="password" type="password" id="create-account-password" placeholder="minimum 10 characters" validate={[required, passwordLength, isTrimmed]} component="input" />
                 <p> In joining this site, I agree to engage in civil and respectful discussion with my peers.  Despite our difference in perspectives, I seek to gain a greater understanding of others through our conversations.</p>
                 <Field name="agreement" type="checkbox" id="create-account-agreement" component="input" required />
                 <p>I agree.</p>
-                <button type="submit">Sign Up</button>
+                <button type="submit" disabled={this.props.pristine || this.props.submitting}> >Sign Up</button>
             </form>
         );
     }
 }
 
-function Error(props) {
-    return (
-        <div class="error-notification">
-            <p>{props.error.text}</p>
-        </div>
-    );
-}
-
-function Footer() {
-    return (
-        <footer role="footer">
-            <ul>
-                <li><Link to="./landing-page.html">About Our Site</Link></li>
-                <li>Contact Us : dummy-email@email.com</li>
-            </ul>
-        </footer>
-    );
-}
+export default reduxForm({
+    form : 'register',
+    onSubmitFail: (errors, dispatch) =>
+        dispatch(focus('registration', Object.keys(errors)[0]))
+})(CreateAccountForm);

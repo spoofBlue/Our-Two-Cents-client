@@ -3,7 +3,7 @@ import React from 'react';
 import {Route} from 'react-router-dom';  // use this.props.history instead
 import {reduxForm, Field} from 'redux-form';
 
-function ConversationSection(props) {
+export default function ConversationSection(props) {
     function sendMessage(values) {
         /** Do this here or in ConversationBoard? this.props.dispatch either way. */
     }
@@ -17,6 +17,7 @@ function ConversationSection(props) {
     );
 }
 
+/*
 ConversationSection.PropType = {
     conversationId : PropType.string.isRequired,
     yourUsername : PropType.string.isRequired,
@@ -26,8 +27,9 @@ ConversationSection.PropType = {
     messageList : PropType.array.isRequired,
     conversationFinished : PropType.bool
 }
+*/
 
-class ConversationBoard extends React.Component {
+export class ConversationBoard extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -57,19 +59,19 @@ class ConversationBoard extends React.Component {
     }
 }
 
-function Message(props) {
+export function Message(props) {
     return (
         <p class="message" user={props.userId}>{this.props.username}: {this.props.message}</p>
     );
 }
 
-function ConversationFinished() {
+export function ConversationFinished() {
     return (
         <p class="conversation-finished-text">The other person has left. Click "Leave Conversation" to exit.</p>
     );
 }
 
-class ConversationForm extends React.Component {
+export class ConversationForm extends React.Component {
     render() {
         return (
             <form class="conversation-form" onSubmit={values=>this.props.sendMessage(values)}>{/**!!!! */}
@@ -81,7 +83,7 @@ class ConversationForm extends React.Component {
     }
 }
 
-function ExitConversation(props) {
+export function ExitConversation(props) {
     return (
         <div class="container exit-conversation-section">
             <button class="leave-conversation-button" onClick={props.exitConversation()}>Leave Conversation</button>{/**!!!! */}

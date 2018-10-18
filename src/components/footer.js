@@ -1,7 +1,7 @@
 
 import {Link} from 'react-router-dom';
 
-function Footer() {
+export default function Footer() {
     return (
         <footer role="footer">
             <ul>

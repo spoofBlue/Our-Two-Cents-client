@@ -4,17 +4,7 @@ import {Link} from 'react-router-dom';
 import {reduxForm, Field} from 'redux-form';
 import PropTypes from 'prop-types'
 
-function Header() {
-    return (
-        <header role="header">
-            <h1>Our Two Cents</h1>
-            <Link to="./main-page.html">Home (icon link)</Link>
-            <Link to="./landing-page.html">About Our Site (icon link)</Link>
-        </header>
-    );
-}
-
-class CreateConversationPage extends React.component {
+export default class CreateConversationPage extends React.component {
     componentDidMount() {
         // this.props.dispatch(make a getTopics fetch(GET))
         // establishing topicList
@@ -45,6 +35,7 @@ class CreateConversationPage extends React.component {
     }
 }
 
+/*
 CreateConversationPage.PropTypes = {
     topicChosen : ProtoTypes.bool,
     conversationCreated : PropTypes.bool,
@@ -52,8 +43,9 @@ CreateConversationPage.PropTypes = {
     createConversationForm : PropTypes.object,
     waitingSection : PropTypes.object
 }
+*/
 
-function ChooseTopicSection(props) {
+export function ChooseTopicSection(props) {
     return (
         <section class="choose-topic-section">
             <h2>Choose one of the many pre-made topics for discussion.</h2>
@@ -62,11 +54,9 @@ function ChooseTopicSection(props) {
     );
 }
 
-function TopicList(props) {
-    const topicList = this.props.topicList.map(topic => {
-        <li class="topic" topicId={props.topicId} onClick={props.onClickTopic(props.topicId)}>
-            {topicName}
-        </li>
+export function TopicList(props) {
+    const topicList = this.props.topicList.map(topic => { /* each itme in array may not be a pair like this. We'll see.*/
+        <Topic {...topic} />
     });
     return (
         <ul>
@@ -75,7 +65,15 @@ function TopicList(props) {
     );
 }
 
-function CreateConversationSection(props) {
+export function Topic(props) {
+    return (
+        <li class="topic" topicId={props.topicId} onClick={props.onClickTopic(topicId)}>
+            {topicName}
+        </li>
+    );
+}
+
+export function CreateConversationSection(props) {
     return (
         <section class="viewpoint-and-submit-section">
         <h2>You choose {props.topic}</h2>
@@ -84,7 +82,7 @@ function CreateConversationSection(props) {
     );
 }
 
-class CreateConversationForm extends React.Component {
+export class CreateConversationForm extends React.Component {
     onSubmit(values) {
         console.log(values);
     }
@@ -100,24 +98,13 @@ class CreateConversationForm extends React.Component {
     }
 }
 
-function WaitingSection(props) {
+export function WaitingSection(props) {
     return (
         <section class="waiting-for-other-person-section">
             <h3 class="waiting-text">Your conversation on {this.props.topicName} is visible. You'll be notified when someone connects.</h3>
             <button class="cancel-conversation-button">Cancel</button>
             <h3 class="success-text" hidden>Success! Your conversation on {this.props.topicName} is about to start.</h3>
         </section>
-    );
-}
-
-function Footer() {
-    return (
-        <footer role="footer">
-            <ul>
-                <li><Link to="./landing-page.html">About Our Site</Link></li>
-                <li>Contact Us : dummy-email@email.com</li>
-            </ul>
-        </footer>
     );
 }
 
