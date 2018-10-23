@@ -1,20 +1,19 @@
 
 import React from 'react';
-import {withRouter, Route, Switch} from 'react-router-dom';
-import {connect, Provider} from 'react-redux';
-import {refreshAuthToken} from '../actions/auth';
-import {conversationStore} from './store';
+import {withRouter, Route, Redirect, Switch} from 'react-router-dom';
+import {connect} from 'react-redux';
+//import {refreshAuthToken} from '../actions/auth';
 
-import LandingPageSection from './landing-page';
-import LoginSection from './login';
-import CreateAccountSection from './create-account';
+import LandingPageSection from './landing-page-section';
+import LoginSection from './login-section';
+import CreateAccountSection from './create-account-section';
 import AvailableConversationSection from "./home";
-import CreateConversationSection from "./create-conversation";
-import ConversationSection from "./conversation";
+import CreateConversationSection from "./create-conversation-section";
+import ConversationSection from "./conversation-section";
 import Header from "./header";
 import Footer from "./footer";
 
-import './App.css';
+import './index.css';
 
 export class App extends React.Component {
   /*
@@ -53,24 +52,29 @@ export class App extends React.Component {
     console.log(`window.location.pathname= `, window.location.pathname);
     let footer;
     let header;
-    if (window.location.pathname === '/conversation') {
-      header = Header;
-      footer = Footer;
+    
+    // will use this.props.route when connected.
+    const route = `/home`;
+    if (!window.location.pathname.startsWith('/conversation')) {
+      header = <Header />;
+      footer = <Footer />;
     }
 
     return (
-      <div class="container">
+      <div className="container">
         {header}
-        <Switch>
-          <Route exact path="/" render={() => <Redirect to="/login" />}/>
-          <Route exact path="/landing-page" component={LandingPageSection} />
-          <Route exact path="/login" component={LoginSection} />
-          <Route exact path="/create-account" component={CreateAccountSection} />
-          <Route exact path="/home" component={AvailableConversationSection} />
-          <Route exact path="/create-conversation" component={CreateConversationSection} />
-          <Route exact path="/conversation/:conversationId" component={ConversationSection} />
-          <Route render={function () {return <p>Not Found</p>}} />
-        </Switch>
+        <main role="main">
+          <Switch>
+            <Route exact path="/" render={() => <Redirect to="/landing-page" />}/>
+            <Route exact path="/landing-page" component={LandingPageSection} />
+            <Route exact path="/login" component={LoginSection} />
+            <Route exact path="/create-account" component={CreateAccountSection} />
+            <Route exact path="/home" component={AvailableConversationSection} />
+            <Route exact path="/create-conversation" component={CreateConversationSection} />
+            <Route exact path="/conversation/:conversationId" component={ConversationSection} />
+            <Route render={function () {return <p>Not Found</p>}} />
+          </Switch>
+        </main>
         {footer}
       </div>
     );
@@ -79,7 +83,7 @@ export class App extends React.Component {
 
 const mapStateToProps = state => ({
   hasAuthToken: state.auth.authToken !== null,
-  loggedIn: state.auth.currentUser !== null
+  loggedIn: state.auth.currentUser !== null,
 });
 
 export default withRouter(connect(mapStateToProps)(App));

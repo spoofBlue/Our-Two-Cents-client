@@ -1,20 +1,20 @@
 
-// reducers/root
-
 // Actions
-import {DIPSLAY_LOADING, START_CONVERSATION, DISPLAY_ERROR, DISPLAY_AVAILABLE_CONVERSATION_LIST} from '../actions/root';
+import {DISPLAY_LOADING, START_CONVERSATION, DISPLAY_ERROR, DISPLAY_AVAILABLE_CONVERSATIONS_LIST} from '../actions/join-convo';
 
+// Initial
 const initialState = {
-    route : null,
+    conversationStarted : false,
     conversationList : [],
     conversationData : {},
-    userId : `99999`,
     loading : false,
     error : null
 }
 
-export default rootReducer = (state=initialState, action) => {
-    if (action.type === DIPSLAY_LOADING) {
+//Reducer
+export default function joinConvoReducer(state=initialState, action) {
+    if (action.type === DISPLAY_LOADING) {
+        console.log(`ran displayLoading`);
         return Object.assign({}, state, {
             loading : true,
         });
@@ -25,18 +25,19 @@ export default rootReducer = (state=initialState, action) => {
         });
     } else if (action.type === START_CONVERSATION) {
         return Object.assign({}, state, {
-            route : action.route,
+            conversationStarted : true,
             conversationData : action.conversationData,
             conversationList : [],
             loading : false,
             error : null
         });
-    } else if (action.type === DISPLAY_AVAILABLE_CONVERSATION_LIST) {
+    } else if (action.type === DISPLAY_AVAILABLE_CONVERSATIONS_LIST) {
+        console.log(`ran displayAvailableConversationList from within reducer. action.conversationList = `, action.conversationList);
         return Object.assign({}, state, {
-            route : action.route,
             conversationList : action.conversationList,
             loading : false,
             error : null
         });
     }
+    return state;
 }

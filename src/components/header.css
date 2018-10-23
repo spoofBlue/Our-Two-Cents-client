@@ -1,0 +1,17 @@
+
+header {
+    display : block;
+    text-align : center;
+}
+
+.header-home-icon {
+    position : absolute;
+    top : 0;
+    left : 0;
+}
+
+.header-about-our-site-icon {
+    position : absolute;
+    top : 0;
+    right : 0;
+}

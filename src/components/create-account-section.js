@@ -1,7 +1,7 @@
 
 // Libraries
 import React from 'react';
-import {connect} from `react-redux`;
+import {connect} from 'react-redux';
 import {Redirect} from 'react-router-dom';
 
 // Components
@@ -12,7 +12,7 @@ export function CreateAccountSection(props) {
         return <Redirect to="/home" />;
     }
     return (
-        <section class="create-account-section">
+        <section className="create-account-section">
             <h2>Create your Account</h2>
             <CreateAccountForm />
         </section>

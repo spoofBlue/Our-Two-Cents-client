@@ -3,7 +3,9 @@ import {createStore, applyMiddleware, combineReducers} from 'redux';
 import {reducer as formReducer} from 'redux-form';
 import thunk from 'redux-thunk';
 
-import rootReducer from './reducers/root';
+import joinConvoReducer from './reducers/join-convo';
+import createConvoReducer from './reducers/create-convo';
+import conversationReducer from './reducers/conversation';
 import authReducer from './reducers/auth';
 import protectedDataReducer from './reducers/protected-data';
 import {setAuthToken, refreshAuthToken} from './actions/auth';
@@ -11,10 +13,12 @@ import {loadAuthToken} from './local-storage';
 
 const store = createStore(
     combineReducers({
-        root : rootReducer,
-        form: formReducer,
-        auth: authReducer,
-        protectedData: protectedDataReducer
+        joinconvo : joinConvoReducer,
+        createconvo : createConvoReducer,
+        convo : conversationReducer,
+        form : formReducer,
+        auth : authReducer,
+        protectedData : protectedDataReducer
     }),
     applyMiddleware(thunk)
 );

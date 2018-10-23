@@ -3,16 +3,22 @@
 import React from 'react';
 
 export default function AvailableConvesation(props) {
-    function onClick() {
-        const availableConversationData = {conversationId : this.props.conversationId, convoUserId: this.props.convoUserId, topicId : this.props.topicId, topicName : this.props.topicName };
-        this.props.startConversation(availableConversationData);
+    function onClick(e) {
+        e.preventDefault();
+        const availableConversationData = {
+            conversationId : props.conversationId, 
+            conversationUserId: props.conversationUserId, 
+            topicId : props.topicId, 
+            topicName : props.topicName 
+        };
+        props.startConversation(availableConversationData);
     }
 
     return (
-        <li class="available-conversation-item" conversationId={this.props.conversationId} convoUserId={this.props.convoUserId} index={this.props.index}>
-            <h3 class="topic" topicId={this.props.topicId}>{this.props.topicName}</h3>
-            <p class="viewpoint">{this.props.viewpoint}</p>
-            <button class="start-conversation-button" onClick={onClick()}>Start Conversation</button>
+        <li className="available-conversation-item">
+            <h3 className="topic">{props.topicName}</h3>
+            <p className="viewpoint">{props.userViewpoint}</p>
+            <button className="start-conversation-button" onClick={onClick}>Start Conversation</button>
         </li>
     );
 }

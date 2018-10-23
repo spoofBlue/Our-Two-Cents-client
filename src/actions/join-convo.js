@@ -1,6 +1,6 @@
 
-import {API_BASE_URL} from '../config';
-import {normalizeResponseErrors} from './utils';
+//import {API_BASE_URL} from '../config';
+//import {normalizeResponseErrors} from './utils';
 
 // Temporary Globals replacing fetched data.
 const TEMP_CONVERSATION_AVAILABILITY_STATUS = {
@@ -8,24 +8,24 @@ const TEMP_CONVERSATION_AVAILABILITY_STATUS = {
     // error : {text : `Conversation has closed or already started.`}
 };
 
-const TEMP_CONVERSATION_AVAILABLE_LIST = {
+const TEMP_CONVERSATIONS_AVAILABLE_LIST = {
     conversationList : [{
         conversationId : '11111',
-        userId : `AAAAA`,
+        conversationUserId : `AAAAA`,
         topicId : '1',
         topicName : `Abortion`,
         userViewpoint : `I believe it should be illegal, under any circumstance.`,
         datePosted : `10-25-18 19:30`
     }, {
         conversationId : '11112',
-        userId : `BBBBB`,
+        conversationUserId : `BBBBB`,
         topicId : '2',
         topicName : `Gun Control`,
         userViewpoint : `I believe we need to ban all firearms in this country.`,
         datePosted : `10-25-18 20:36`
     }, {
         conversationId : '11113',
-        userId : `CCCCC`,
+        conversationUserId : `CCCCC`,
         topicId : '3',
         topicName : `Immigration Reform`,
         userViewpoint : `I don't think we're doing enough to vet immigrants from coming into the country.`,
@@ -33,8 +33,7 @@ const TEMP_CONVERSATION_AVAILABLE_LIST = {
     }
 ]};
 
-// actions
-
+// Actions
 export const DISPLAY_LOADING = `DISPLAY_LOADING`;
 export const displayLoading = () => ({
     type : DISPLAY_LOADING,
@@ -43,7 +42,6 @@ export const displayLoading = () => ({
 export const START_CONVERSATION = `START_CONVERSATION`;
 export const startConversation = (availableConversationData) => ({
     type : START_CONVERSATION,
-    route : `/conversation/${availableConversationData.conversationId}`,
     conversationData : availableConversationData,
 });
 
@@ -53,24 +51,24 @@ export const displayError = status => ({
     error : status.error
 });
 
-export const DISPLAY_AVAILABLE_CONVERSATION_LIST = `DISPLAY_AVAILABLE_CONVERSATION_LIST`;
-export const displayAvailableConversationList = (conversationList) => ({
-    route : '/home',
-    type : DISPLAY_AVAILABLE_CONVERSATION_LIST,
+export const DISPLAY_AVAILABLE_CONVERSATIONS_LIST = `DISPLAY_AVAILABLE_CONVERSATIONS_LIST`;
+export const displayAvailableConversationsList = (conversationList) => ({
+    type : DISPLAY_AVAILABLE_CONVERSATIONS_LIST,
     conversationList
 });
 
-// factory functions
+// Intermediary functions
 
 export const checkConversationAvailability = (conversationId, userId) => {
-    // !!!! make a POST fetch request to the server to see if conversationId still has status 'available' = true;
-    return Promise.resolve(TEMP_CONVERSATION_AVAILABILITY_STATUS);
-}
-// make a fetch(POST) the conversation has found a 2nd member too
+    // !!!! make a GET fetch request to the server to see if conversationId still has status 'available' = true;
+    return TEMP_CONVERSATION_AVAILABILITY_STATUS;
+};
+// make a fetch(POST) the conversation has found a 2nd member too (set available = false, 
+// and send a response to the awaiting 2nd member, sending them into conversation as well.)
 
 export const prepareConversation = (availableConversationData) => dispatch => {
-    // availableConversationData should have conversationId, convoUserId, topicId, topicName.
-    dipsatch(displayLoading());
+    // availableConversationData should have conversationId, conversationUserId, topicId, topicName.
+    dispatch(displayLoading());
     /* for when asynchonous calls are brought in.
     checkConversationAvailability(availableConversationData.conversationId)
     .then(res => normalizeResponseErrors(res))
@@ -84,16 +82,17 @@ export const prepareConversation = (availableConversationData) => dispatch => {
         if (TEMP_CONVERSATION_AVAILABILITY_STATUS.error) {
             dispatch(displayError(TEMP_CONVERSATION_AVAILABILITY_STATUS));
         }
-        dispatch(getAvailableConversationList());
+        dispatch(getAvailableConversationsList());
     }
-}
+};
 
-export const getAvailableConversationList = () => dispatch => {
+export const getAvailableConversationsList = () => dispatch => {
     // !!!! Make a fetch GET request here to get the conversationAvailableList.
     /* for when asynchonous calls are brought in.
     .then()
     .catch()
     */
-    const conversationList = TEMP_CONVERSATION_AVAILABLE_LIST;
-    dispatch(displayAvailableConversationList(conversationList));
+    const conversationList = TEMP_CONVERSATIONS_AVAILABLE_LIST.conversationList;
+    console.log(`getAvailableConversatoinList in actions. conversationList = `, conversationList);
+    dispatch(displayAvailableConversationsList(conversationList));
 };

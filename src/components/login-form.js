@@ -13,7 +13,7 @@ import ErrorNotification from './error-notification';
 // Validators
 import {required, nonEmpty} from '../validators';
 
-export class LoginForm extends React.component {
+export class LoginForm extends React.Component {
     onSubmit(values) {
         console.log(values);
         const {email, password} = values;
@@ -27,14 +27,14 @@ export class LoginForm extends React.component {
             error = (<ErrorNotification {...this.props.error} />);
         }
         return(
-            <form id="login-form" role="form" onSubmit={this.props.handleSubmit(values => this.onSubmit(values))}>
+            <form id="login-form" onSubmit={this.props.handleSubmit(values => this.onSubmit(values))}>
                 {error}
                 <label htmlFor="email">E-mail:</label>
                 <Field name="email" type="email" id="login-email" placeholder="BobSmith@email.com" validate={[required, nonEmpty]} component="input" />
                 <label htmlFor="password"></label>
                 <Field name="password" type="password" id="login-password" placeholder="minimum 10 characters" validate={[required, nonEmpty]} component="input" />
                 <button type="submit">Sign In</button>
-                (Button doesn't work yet, <Link to="./home.html">Sign In Link autosend to Home</Link>)
+                (Button doesn't work yet, <Link to="./home">Sign In Link sends to Home</Link>)
             </form>
         );
     }

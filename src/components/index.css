@@ -1,0 +1,34 @@
+
+* {
+    margin : 0;
+    box-sizing : border-box;
+}
+
+main {
+    /*min-height : 200px;*/
+    padding : 0;
+    background-color : grey;
+}
+
+section {
+    padding : 10px;
+    height : 400px;
+    background-color : lightgrey;
+    border-top : black 1px solid;
+}
+
+a {
+    color : blue;
+}
+
+.light-grey {
+    background-color : lightgrey;
+}
+
+.grey {
+    background-color : grey;
+}
+
+.dark-grey {
+    background-color : rgb(60, 60, 60);
+}

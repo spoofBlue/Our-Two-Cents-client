@@ -30,7 +30,7 @@ export class CreateAccountForm extends React.Component {
             error = (<ErrorNotification {...this.props.error} />);
         }
         return(
-            <form id="create-account-form" role="form" onSubmit={this.props.handleSubmit(values => this.onSubmit(values))}>
+            <form id="create-account-form" onSubmit={this.props.handleSubmit(values => this.onSubmit(values))}>
                 {error}
                 <label htmlFor="firstName">First Name:</label>
                 <Field name="firstName" id="create-account-first-name" placeholder="Bob" validate={[required, nonEmpty]} component="input" />
@@ -50,7 +50,7 @@ export class CreateAccountForm extends React.Component {
 }
 
 export default reduxForm({
-    form : 'register',
+    form : 'registration',
     onSubmitFail: (errors, dispatch) =>
         dispatch(focus('registration', Object.keys(errors)[0]))
 })(CreateAccountForm);
