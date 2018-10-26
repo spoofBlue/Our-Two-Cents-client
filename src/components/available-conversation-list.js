@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {Redirect} from 'react-router-dom';
 
 // Actions
-import {prepareConversation, getAvailableConversationsList} from '../actions/join-convo'
+import {prepareConversation, getAvailableConversationsList, resetComponent} from '../actions/join-convo'
 
 // Components
 import AvailableConversation from './available-conversation';
@@ -16,8 +16,12 @@ export class AvailableConversationList extends React.Component {
         this.props.dispatch(getAvailableConversationsList());
     }
 
+    componentWillUnmount() {
+        this.props.dispatch(resetComponent());
+    }
+
     startConversation(availableConversationData) {
-        console.log(`start conversation. availableConversationData= `, availableConversationData);  // availableConversationData has conversationId, conversationUserId, topicId, topicName
+        console.log(`start conversation. availableConversationData= `, availableConversationData);  // availableConversationData has conversationId, hostUserId, topicId, topicName
         this.props.dispatch(prepareConversation(availableConversationData));
     }
     
@@ -26,7 +30,7 @@ export class AvailableConversationList extends React.Component {
             const route = `/conversation/${this.props.conversationData.conversationId}`;
             return (<Redirect to={route} />);
         }
-        console.log(`render() this.props.conversationList= `, this.props.conversationList);
+        console.log(`render() this.props= `, this.props);
         const conversationList = this.props.conversationList.map((convo, index) => 
             <AvailableConversation {...convo} key={index} startConversation={availableConversationData => this.startConversation(availableConversationData)} />
         );
@@ -52,7 +56,8 @@ export class AvailableConversationList extends React.Component {
 }
 
 const mapStateToProps = state => {
-    console.log(`in mapStateToProps. state.joinConvo = `, state.joinConvo);
+    console.log(`in mapStateToProps. state = `, state);
+    console.log(`in mapStateToProps. state.joinConvo = `, state.joinconvo);
     return ({
         userId : state.auth.userId,
         conversationList : state.joinconvo.conversationList,

@@ -3,7 +3,7 @@
 import React from 'react';
 import {reduxForm, Field} from 'redux-form';
 
-export class CreateConversationForm extends React.Component {    
+export class CreateConversationForm extends React.Component {
     render() {
         return (
             <form className="create-conversation-form" onSubmit={this.props.handleSubmit(value => this.props.onViewpointSubmit(value))}>

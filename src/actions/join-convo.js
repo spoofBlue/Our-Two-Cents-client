@@ -11,21 +11,21 @@ const TEMP_CONVERSATION_AVAILABILITY_STATUS = {
 const TEMP_CONVERSATIONS_AVAILABLE_LIST = {
     conversationList : [{
         conversationId : '11111',
-        conversationUserId : `AAAAA`,
+        hostUserId : `AAAAA`,
         topicId : '1',
         topicName : `Abortion`,
         userViewpoint : `I believe it should be illegal, under any circumstance.`,
         datePosted : `10-25-18 19:30`
     }, {
         conversationId : '11112',
-        conversationUserId : `BBBBB`,
+        hostUserId : `BBBBB`,
         topicId : '2',
         topicName : `Gun Control`,
         userViewpoint : `I believe we need to ban all firearms in this country.`,
         datePosted : `10-25-18 20:36`
     }, {
         conversationId : '11113',
-        conversationUserId : `CCCCC`,
+        hostUserId : `CCCCC`,
         topicId : '3',
         topicName : `Immigration Reform`,
         userViewpoint : `I don't think we're doing enough to vet immigrants from coming into the country.`,
@@ -57,17 +57,22 @@ export const displayAvailableConversationsList = (conversationList) => ({
     conversationList
 });
 
+export const RESET_COMPONENT = `RESET_COMPONENT`;
+export const resetComponent = () => ({
+    type : RESET_COMPONENT
+});
+
 // Intermediary functions
 
 export const checkConversationAvailability = (conversationId, userId) => {
     // !!!! make a GET fetch request to the server to see if conversationId still has status 'available' = true;
     return TEMP_CONVERSATION_AVAILABILITY_STATUS;
 };
-// make a fetch(POST) the conversation has found a 2nd member too (set available = false, 
+// make a fetch(POST) the conversation has found a 2nd member too (set available = false, or just remove from the availableConversation database
 // and send a response to the awaiting 2nd member, sending them into conversation as well.)
 
 export const prepareConversation = (availableConversationData) => dispatch => {
-    // availableConversationData should have conversationId, conversationUserId, topicId, topicName.
+    // availableConversationData should have conversationId, hostUserId, topicId, topicName.
     dispatch(displayLoading());
     /* for when asynchonous calls are brought in.
     checkConversationAvailability(availableConversationData.conversationId)

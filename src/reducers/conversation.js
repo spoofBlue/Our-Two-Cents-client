@@ -1,6 +1,6 @@
 
 // Actions
-import {DISPLAY_CONVERSATION_STARTED, DISPLAY_MESSAGE_LIST, UPDATE_CONVO_DATA, DISPLAY_CONVERSATION_FINISHED, DISPLAY_CONVERSATION_LEAVING} from '../actions/conversation';
+import {DISPLAY_CONVERSATION_STARTED, DISPLAY_MESSAGE_LIST, UPDATE_CONVO_DATA, DISPLAY_CONVERSATION_FINISHED, DISPLAY_CONVERSATION_LEAVING, RESET_COMPONENT} from '../actions/conversation';
 
 // Reducer
 
@@ -49,6 +49,17 @@ export default function conversationReducer(state=initialState, action) {
             loading : false,
             error : false
         });
+    } else if (action.type === RESET_COMPONENT) {
+        return Object.assign({}, state, {
+            conversationStarted : false,
+            conversationFinished : false,
+            leaveConversation : false,
+            convoData : {},
+            messageList : [],
+            loading : false,
+            error : false
+        });
     }
     return state;
 }
+

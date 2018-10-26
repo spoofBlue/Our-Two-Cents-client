@@ -1,10 +1,10 @@
 
 const TEMP_CONVODATA = {
     conversationId : "11112",
-    yourUsername : "Paul",
-    yourUserId : "AAAAA",
-    otherUsername : "Laura",
-    otherUserId : "BBBBB",
+    hostUserId : "AAAAA",
+    hostUsername : "Paul",
+    guestUserId : "BBBBB",
+    guestUsername : "Laura",
     topicId : "2",
     topicName : "Gun Control",
 }
@@ -13,18 +13,22 @@ const TEMP_MESSAGELIST = {
     messageList : [
         {
         userId : "AAAAA",
+        username : "Paul",
         timeSent : "18:39:22",
         text : "Hello, my name is Paul. Nice to meet you."
         }, {
         userId : "BBBBB",
+        username : "Laura",
         timeSent : "18:39:28",
         text : "Hi, I'm Laura, it's a pleasure! Where are you from?"
         }, {
         userId : "AAAAA",
+        username : "Paul",
         timeSent : "18:39:39",
         text : "I'm from Oklahoma. Born and raised in a small town called Stillwater."  
         }, {
         userId : "AAAAA",
+        username : "Paul",
         timeSent : "18:39:44",
         text : "As you can imagine, I've grown up with firearms most my life."
         }
@@ -58,51 +62,59 @@ export const displayConversationLeaving = () => ({
     type : DISPLAY_CONVERSATION_LEAVING
 });
 
-/*
-export const updateMessageList = (message, messageList, username) => dispatch => {
+export const RESET_COMPONENT = `RESET_COMPONENT`;
+export const resetComponent = () => ({
+    type : RESET_COMPONENT
+});
 
-};
-*/
-
-export const initializeConversation = (conversationId) => dispatch => {
-    dispatch(getConversationData(conversationId));  // This is asynchronous, treat it accordingly when server brought in.
+export const initializeConversation = (userId, conversationId) => dispatch => {
+    dispatch(getConversationData(userId, conversationId));  // This is asynchronous, treat it accordingly when server brought in.
     dispatch(displayConversationStarted());
 }
 
-export const getConversationData = (conversationId) => dispatch => {
+export const getConversationData = (userId, conversationId) => dispatch => {
     // Makes a fetch(GET) request using convoData.conversationId to the server to get any of the missing information on this conversation.
-    // Specifically, the otherUsername and otherUserId (as we could already have the other information with us).
+    // The conversation data doesn't specify which user is you, so we use our userId to determine which userId and username belong to the other person:
+    // Which will become otherPersonUserId and OtherPersoneUsername, respectively.
     console.log(`fetch request will get data for `, conversationId);
-    const convoData = TEMP_CONVODATA;
+    const fetchedData = TEMP_CONVODATA;
+    const convoData = {
+        conversationId : fetchedData.conversationId,
+        otherPersonUserId : fetchedData.hostUserId !== userId ? fetchedData.hostUserId : fetchedData.guestUserId,
+        otherPersonUsername : fetchedData.hostUserId !== userId ? fetchedData.hostUsername : fetchedData.guestUsername,
+        topicId : fetchedData.topicId,
+        topicName : fetchedData.topicName
+    }
+    
     dispatch(updateConvoData(convoData));
 }
 
 export const exitConversation = (convoData) => dispatch => {
     // Leaves the conversation, but first sends a POST request notifying the server and other user they're leaving.
-    dispatch(notifyServerUserOfExit(convoData));  // Uncaught Error: Actions must be plain objects. Use custom middleware for async actions. !! But no async work here yet?
+    dispatch(notifyServerUserOfExit(convoData));
     dispatch(displayConversationFinished());
     dispatch(displayConversationLeaving());
 }
 
-export const notifyServerUserOfExit = (convoData) => {
-    console.log(`other user ${convoData.otherUsername} notified of you leaving.`);
+const notifyServerUserOfExit = (convoData) => dispatch => {
+    console.log(`other user ${convoData.otherPersonUsername} notified of you leaving.`);
 }
 
 export const processSubmittedMessage = (conversationId, messageList, message) => dispatch => {  // I won't need to bring in messageList when I can retrieve it from the server.
-    const newMessageList = dispatch(sendMessageToUser(conversationId, messageList, message));  // aynsc, everything following is in response to this promise.
+    const newMessageList = sendMessageToUser(conversationId, messageList, message);  // aynsc, everything following is in response to this promise.
     // function above retrieves messageList
     dispatch(displayMessageList(newMessageList));
 };
 
-export const sendMessageToUser = (conversationId, messageList, message) => {
-    // Make a fetch(POST) request to the server, adding this message to the messageList.
+const sendMessageToUser = (conversationId, messageList, message) => {
+    // Make a fetch(POST) request to the server, adding this message to the messageList of the conversation with conversationId.
     // Will get a response with the updated messageList.
     return addMessageToMessageList(messageList, message);  // !!! This is temporary, we'll actually get the offical messageList from the server
 };
 
-export const addMessageToMessageList = (messageList, message) => {
-    console.log('messageList=', messageList);
+const addMessageToMessageList = (messageList, message) => {
     messageList.push(message);
+    console.log('messageList=', messageList);
     return messageList;
 }
 

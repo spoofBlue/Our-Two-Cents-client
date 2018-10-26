@@ -3,8 +3,8 @@ import React from 'react';
 import {reduxForm, Field, reset, change} from 'redux-form';
 
 export class ConversationForm extends React.Component {
-    onSubmit(value) {
-        this.props.sendMessage(value.message);
+    onSubmit(message) {
+        this.props.sendMessage(message);
         this.props.dispatch(reset(`messagenger`));
     }
 

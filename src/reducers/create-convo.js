@@ -1,6 +1,6 @@
 
 // Actions
-import {DISPLAY_LOADING, DISPLAY_TOPIC_LIST, UPDATE_CREATE_CONVO_DATA, DISPLAY_VIEWPOINT, REMOVE_VIEWPOINT, DISPLAY_WAITING_SECTION, REMOVE_WAITING_SECTION} from '../actions/create-convo';
+import {DISPLAY_LOADING, DISPLAY_TOPIC_LIST, UPDATE_CREATE_CONVO_DATA, DISPLAY_VIEWPOINT, REMOVE_VIEWPOINT, DISPLAY_WAITING_SECTION, REMOVE_WAITING_SECTION, RESET_COMPONENT} from '../actions/create-convo';
 
 // Initial
 const initialState = {
@@ -49,6 +49,8 @@ export default function createConvoReducer(state=initialState, action) {
             conversationCreated : false,
             loading : false
         });
+    } else if (action.type === RESET_COMPONENT) {
+        return Object.assign({}, initialState);
     }
     return state;
 }

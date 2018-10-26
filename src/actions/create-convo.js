@@ -54,6 +54,11 @@ export const removeWaitingSection = () => ({
     type : REMOVE_WAITING_SECTION
 });
 
+export const RESET_COMPONENT = 'RESET_COMPONENT';
+export const resetComponent = () => ({
+    type : RESET_COMPONENT
+});
+
 export const getTopicList = () => dispatch => {
     console.log(`ran getTopicList`);
     dispatch(displayLoading());
@@ -87,8 +92,8 @@ export const createAvailableConversation = (createConvoData) => dispatch => {
     // Make a fetch(POST) request with createConvoData to make this conversation available for others to see.
     // Will also receive a response giving us a conversationId to roll into createConvoData
     createConvoData.conversationId = "ABCDE";
-    // successful post: we display the waiting section in app.
-    // Failed post: we send an error, something went wrong.
+    // successful post: we display the waiting section in app. .then()
+    // Failed post: we send an error, something went wrong on the server. .catch()
     dispatch(updateCreateConvoData(createConvoData));
 };
 
@@ -104,11 +109,11 @@ export const cancelWaitingSection = (createConvoData) => dispatch => {
     dispatch(displayViewpoint());
 };
 
-export const cancelConversationRevertComponent = (createConvoData) => dispatch => {
+export const cancelConversationResetComponent = (createConvoData) => dispatch => {
     dispatch(cancelAvailableConversation(createConvoData));
-    dispatch(removeWaitingSection());
+    dispatch(resetComponent());
 }
 
 export const cancelAvailableConversation = (createConvoData) => dispatch => {
-    // Make a fetch(POST) request with createConvoData.conversationId to remove this conversation from others visibility.
+    // Make a fetch(POST) request with createConvoData.conversationId to remove this available conversation from databse/ others visibility.
 };

@@ -5,11 +5,11 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 // Actions
-import {getTopicList, processTopicChosen, cancelViewpointSection, processViewpointChosen, cancelWaitingSection, cancelConversationRevertComponent} from '../actions/create-convo';
+import {getTopicList, processTopicChosen, cancelViewpointSection, processViewpointChosen, cancelWaitingSection, cancelConversationResetComponent, resetComponent} from '../actions/create-convo';
 
 // Components
 import ChooseTopicSection from './choose-topic-section';
-import ChooseViewpointSection from './create-viewpoint-section';
+import ChooseViewpointSection from './choose-viewpoint-section';
 import WaitingSection from './waiting-section';
 
 export class CreateConversationSection extends React.Component {
@@ -19,10 +19,10 @@ export class CreateConversationSection extends React.Component {
     }
 
     componentWillUnmount() {
-        if (this.props.topicChosenOnly) {
-            this.props.dispatch(cancelViewpointSection());
-        } else if (this.props.conversationCreated) {
-            this.props.dispatch(cancelConversationRevertComponent(this.props.createConvoData));
+        if (this.props.conversationCreated) {
+            this.props.dispatch(cancelConversationResetComponent(this.props.createConvoData));
+        } else {
+            this.props.dispatch(resetComponent);
         }
     }
 
@@ -35,7 +35,7 @@ export class CreateConversationSection extends React.Component {
     }
 
     onViewpointSubmit(viewpointChosenData) {
-        const newCreateConvoData = {...this.props.createConvoData, ...viewpointChosenData, currentuser : this.props.currentuser};
+        const newCreateConvoData = {...this.props.createConvoData, ...viewpointChosenData, userId : this.props.userId, username : this.props.username};
         this.props.dispatch(processViewpointChosen(newCreateConvoData));
     }
 
@@ -76,7 +76,8 @@ CreateConversationSection.propTypes = {
 const mapStateToProps = state => {
     console.log(`in mapStateToProps. state.createConvo= `, state.createconvo);
     return ({
-        currentUser : state.auth.currentUser,
+        userId : state.auth.userId,
+        username : state.auth.username,
         topicList : state.createconvo.topicList,
         createConvoData : state.createconvo.createConvoData,
         topicChosenOnly : state.createconvo.topicChosenOnly,
