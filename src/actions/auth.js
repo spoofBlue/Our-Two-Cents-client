@@ -42,8 +42,9 @@ const storeAuthInfo = (authToken, dispatch) => {
     saveAuthToken(authToken);
 };
 
-export const login = (username, password) => dispatch => {
+export const login = (userEmail, password) => dispatch => {
     dispatch(authRequest());
+    const username = userEmail; //jwt is strict, wants 'username'.  Letting code reviewer know that this was originally userEmail before renaming.
     return (
         fetch(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
@@ -55,24 +56,24 @@ export const login = (username, password) => dispatch => {
                 password
             })
         })
-            // Reject any requests which don't return a 200 status, creating errors which follow a consistent format.
-            .then(res => normalizeResponseErrors(res))
-            .then(res => res.json())
-            .then(({authToken}) => storeAuthInfo(authToken, dispatch))
-            .catch(err => {
-                const {code} = err;
-                const message =
-                    code === 401
-                        ? 'Incorrect username or password'
-                        : 'Unable to login, please try again';
-                dispatch(authError(err));
-                // Could not authenticate, so return a SubmissionError for Redux Form.
-                return Promise.reject(
-                    new SubmissionError({
-                        _error: message
-                    })
-                );
-            })
+        // Reject any requests which don't return a 200 status, creating errors which follow a consistent format.
+        .then(res => normalizeResponseErrors(res))
+        .then(res => res.json())
+        .then(({authToken}) => storeAuthInfo(authToken, dispatch))
+        .catch(err => {
+            const {code} = err;
+            const message =
+                code === 401
+                    ? 'Incorrect email or password.'
+                    : 'Unable to login, please try again.';
+            dispatch(authError(err));
+            // Could not authenticate, so return a SubmissionError for Redux Form.
+            return Promise.reject(
+                new SubmissionError({
+                    _error: message
+                })
+            );
+        })
     );
 };
 
@@ -95,4 +96,10 @@ export const refreshAuthToken = () => (dispatch, getState) => {
             dispatch(clearAuth());
             clearAuthToken(authToken);
         });
+};
+
+export const logout = () => (dispatch, getState) => {
+    const authToken = getState().auth.authToken;
+    dispatch(clearAuth());
+    clearAuthToken(authToken);
 };

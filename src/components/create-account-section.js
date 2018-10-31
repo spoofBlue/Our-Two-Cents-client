@@ -14,13 +14,14 @@ export function CreateAccountSection(props) {
     return (
         <section className="create-account-section">
             <h2>Create your Account</h2>
-            <CreateAccountForm />
+            <CreateAccountForm error={props.error} />
         </section>
     );  
 }
 
 const mapStateToProps = state => ({
-    loggedIn: state.auth.currentUser !== null
+    loggedIn: state.auth.currentUser !== null,
+    error: state.auth.error
 });
 
 export default connect(mapStateToProps)(CreateAccountSection);

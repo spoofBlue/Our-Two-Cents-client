@@ -8,7 +8,7 @@ import {reduxForm, Field, focus} from 'redux-form';
 import {login} from '../actions/auth';
 
 // Components
-import ErrorNotification from './error-notification';
+import Input from './input';
 
 // Validators
 import {required, nonEmpty} from '../validators';
@@ -16,25 +16,23 @@ import {required, nonEmpty} from '../validators';
 export class LoginForm extends React.Component {
     onSubmit(values) {
         console.log(values);
-        const {email, password} = values;
-        // return this.props.dispatch(login(values.username, values.password));
-        // Home component
+        return this.props.dispatch(login(values.email, values.password));
     }
 
     render() {
         let error;
+        console.log(`in login-form. this.props.error=`, this.props.error);
         if (this.props.error) {
-            error = (<ErrorNotification {...this.props.error} />);
+            error = (<p className="error">{this.props.error}</p>);
         }
         return(
             <form id="login-form" onSubmit={this.props.handleSubmit(values => this.onSubmit(values))}>
                 {error}
                 <label htmlFor="email">E-mail:</label>
-                <Field name="email" type="email" id="login-email" placeholder="BobSmith@email.com" validate={[required, nonEmpty]} component="input" />
-                <label htmlFor="password"></label>
-                <Field name="password" type="password" id="login-password" placeholder="minimum 10 characters" validate={[required, nonEmpty]} component="input" />
+                <Field name="email" type="email" id="login-email" placeholder="BobSmith@email.com" validate={[required, nonEmpty]} component={Input} />
+                <label htmlFor="password">Password</label>
+                <Field name="password" type="password" id="login-password" placeholder="minimum 10 characters" validate={[required, nonEmpty]} component={Input} />
                 <button type="submit">Sign In</button>
-                (Button doesn't work yet, <Link to="./home">Sign In Link sends to Home</Link>)
             </form>
         );
     }

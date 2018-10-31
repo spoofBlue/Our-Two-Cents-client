@@ -7,7 +7,7 @@ export default function AvailableConvesation(props) {
         e.preventDefault();
         const availableConversationData = {
             conversationId : props.conversationId, 
-            conversationUserId: props.conversationUserId, 
+            hostUserId: props.hostUserId,
             topicId : props.topicId, 
             topicName : props.topicName 
         };

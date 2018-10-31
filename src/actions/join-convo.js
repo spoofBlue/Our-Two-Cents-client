@@ -15,23 +15,30 @@ const TEMP_CONVERSATIONS_AVAILABLE_LIST = {
         topicId : '1',
         topicName : `Abortion`,
         userViewpoint : `I believe it should be illegal, under any circumstance.`,
-        datePosted : `10-25-18 19:30`
     }, {
         conversationId : '11112',
         hostUserId : `BBBBB`,
         topicId : '2',
         topicName : `Gun Control`,
         userViewpoint : `I believe we need to ban all firearms in this country.`,
-        datePosted : `10-25-18 20:36`
     }, {
         conversationId : '11113',
         hostUserId : `CCCCC`,
         topicId : '3',
         topicName : `Immigration Reform`,
         userViewpoint : `I don't think we're doing enough to vet immigrants from coming into the country.`,
-        datePosted : `10-25-18 20:36`
     }
 ]};
+
+/*
+conversationId : this._id,
+        hostUserId : this.hostUserId,
+        hostUsername : this.hostUsername,
+        hostViewpoint : this.hostViewpoint,
+        topicId : this.topicId,
+        topicName : this.topicName,
+        status : this.status
+        */
 
 // Actions
 export const DISPLAY_LOADING = `DISPLAY_LOADING`;

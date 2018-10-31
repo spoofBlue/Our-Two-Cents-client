@@ -4,7 +4,6 @@ import React from 'react';
 import Message from './message';
 
 export default function ConversationBoard(props) {
-    console.log('props.messageList=', props.messageList);
     const board = props.messageList.map((message, index) => {
         if (props.username === message.username) {
             message.myMessage = true;

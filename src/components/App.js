@@ -2,7 +2,7 @@
 import React from 'react';
 import {withRouter, Route, Redirect, Switch} from 'react-router-dom';
 import {connect} from 'react-redux';
-//import {refreshAuthToken} from '../actions/auth';
+import {refreshAuthToken, logout} from '../actions/auth';
 
 import LandingPageSection from './landing-page-section';
 import LoginSection from './login-section';
@@ -16,8 +16,7 @@ import Footer from "./footer";
 import './index.css';
 
 export class App extends React.Component {
-  /*
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps) {  // !!!!
     if (!prevProps.loggedIn && this.props.loggedIn) {
       // When we are logged in, refresh the auth token periodically
       this.startPeriodicRefresh();
@@ -27,25 +26,29 @@ export class App extends React.Component {
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount() { // !!!!
     this.stopPeriodicRefresh();
   }
 
-  startPeriodicRefresh() {
+  startPeriodicRefresh() { // !!!!
     this.refreshInterval = setInterval(
         () => this.props.dispatch(refreshAuthToken()),
         24 * 60 * 60 * 1000 // Can go 24 hours without refreshing.
     );
   }
 
-  stopPeriodicRefresh() {
+  stopPeriodicRefresh() {  // !!!!
     if (!this.refreshInterval) {
         return;
     }
 
-    clearInterval(this.refreshInterval);
+    clearInterval(this.refreshInterval);  // !!!!
   }
-  */
+
+  onLogoutClick() {
+    console.log(`ran onLogoutClick()`);
+    this.props.dispatch(logout());
+  }
 
   render() {
     console.log(`Hello App.js`);
@@ -53,10 +56,8 @@ export class App extends React.Component {
     let footer;
     let header;
     
-    // will use this.props.route when connected.
-    const route = `/home`;
     if (!window.location.pathname.startsWith('/conversation')) {
-      header = <Header />;
+      header = <Header onClick={() => this.onLogoutClick()}/>;
       footer = <Footer />;
     }
 
@@ -83,7 +84,7 @@ export class App extends React.Component {
 
 const mapStateToProps = state => ({
   hasAuthToken: state.auth.authToken !== null,
-  loggedIn: state.auth.currentUser !== null,
+  loggedIn: state.auth.currentUser !== null
 });
 
 export default withRouter(connect(mapStateToProps)(App));

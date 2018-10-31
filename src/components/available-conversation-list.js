@@ -9,7 +9,6 @@ import {prepareConversation, getAvailableConversationsList, resetComponent} from
 
 // Components
 import AvailableConversation from './available-conversation';
-import ErrorNotification from './error-notification';
 
 export class AvailableConversationList extends React.Component {
     componentDidMount() {
@@ -26,6 +25,9 @@ export class AvailableConversationList extends React.Component {
     }
     
     render() {
+        if (!this.props.loggedIn) {
+            return <Redirect to="/login" />;
+        }
         if (this.props.conversationStarted) {
             const route = `/conversation/${this.props.conversationData.conversationId}`;
             return (<Redirect to={route} />);
@@ -37,7 +39,7 @@ export class AvailableConversationList extends React.Component {
         let error;
         let loading;
         if (this.props.error) {
-            error = <ErrorNotification {...this.props.error} />;
+            error = (<p className="error">{this.props.error}</p>);
         }
         if (this.props.loading === true) {
             loading = <div>Loading...</div>
@@ -59,6 +61,7 @@ const mapStateToProps = state => {
     console.log(`in mapStateToProps. state = `, state);
     console.log(`in mapStateToProps. state.joinConvo = `, state.joinconvo);
     return ({
+        loggedIn: state.auth.currentUser !== null,
         userId : state.auth.userId,
         conversationList : state.joinconvo.conversationList,
         conversationData : state.joinconvo.conversationData,
