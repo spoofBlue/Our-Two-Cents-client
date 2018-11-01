@@ -9,32 +9,6 @@ const TEMP_CONVODATA = {
     topicName : "Gun Control",
 }
 
-const TEMP_MESSAGELIST = {
-    messageList : [
-        {
-        userId : "AAAAA",
-        username : "Paul",
-        timeSent : "18:39:22",
-        text : "Hello, my name is Paul. Nice to meet you."
-        }, {
-        userId : "BBBBB",
-        username : "Laura",
-        timeSent : "18:39:28",
-        text : "Hi, I'm Laura, it's a pleasure! Where are you from?"
-        }, {
-        userId : "AAAAA",
-        username : "Paul",
-        timeSent : "18:39:39",
-        text : "I'm from Oklahoma. Born and raised in a small town called Stillwater."  
-        }, {
-        userId : "AAAAA",
-        username : "Paul",
-        timeSent : "18:39:44",
-        text : "As you can imagine, I've grown up with firearms most my life."
-        }
-    ],
-}
-
 export const DISPLAY_MESSAGE_LIST = 'DISPLAY_MESSAGE_LIST';
 export const displayMessageList = (messageList) => ({
     type : DISPLAY_MESSAGE_LIST,

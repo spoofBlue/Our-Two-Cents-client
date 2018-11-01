@@ -20,8 +20,9 @@ export class AvailableConversationList extends React.Component {
     }
 
     startConversation(availableConversationData) {
-        console.log(`start conversation. availableConversationData= `, availableConversationData);  // availableConversationData has conversationId, hostUserId, topicId, topicName
-        this.props.dispatch(prepareConversation(availableConversationData));
+        console.log(`start conversation. availableConversationData= `, availableConversationData);
+        // Opt to just get all the relevant convo information from the server response. Still using conversationId for server contact.
+        this.props.dispatch(prepareConversation(availableConversationData.conversationId, this.props.currentUser.userId, this.props.currentUser.username));
     }
     
     render() {
@@ -62,7 +63,7 @@ const mapStateToProps = state => {
     console.log(`in mapStateToProps. state.joinConvo = `, state.joinconvo);
     return ({
         loggedIn: state.auth.currentUser !== null,
-        userId : state.auth.userId,
+        currentUser : state.auth.currentUser,
         conversationList : state.joinconvo.conversationList,
         conversationData : state.joinconvo.conversationData,
         conversationStarted : state.joinconvo.conversationStarted,

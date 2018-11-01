@@ -1,29 +1,31 @@
 
-//import {API_BASE_URL} from '../config';
-//import {normalizeResponseErrors} from './utils';
+import {API_BASE_URL} from '../config';
+import {normalizeResponseErrors} from './utils';
 
 // Temporary Globals replacing fetched data.
 const TEMP_CONVERSATION_AVAILABILITY_STATUS = {
     available : true
-    // error : {text : `Conversation has closed or already started.`}
 };
 
 const TEMP_CONVERSATIONS_AVAILABLE_LIST = {
     conversationList : [{
         conversationId : '11111',
         hostUserId : `AAAAA`,
+        hostUsername : 'Laura K.',
         topicId : '1',
         topicName : `Abortion`,
         userViewpoint : `I believe it should be illegal, under any circumstance.`,
     }, {
         conversationId : '11112',
         hostUserId : `BBBBB`,
+        hostUsername : 'Paul S.',
         topicId : '2',
         topicName : `Gun Control`,
         userViewpoint : `I believe we need to ban all firearms in this country.`,
     }, {
         conversationId : '11113',
         hostUserId : `CCCCC`,
+        hostUsername : 'Randal M.',
         topicId : '3',
         topicName : `Immigration Reform`,
         userViewpoint : `I don't think we're doing enough to vet immigrants from coming into the country.`,
@@ -47,9 +49,9 @@ export const displayLoading = () => ({
 });
 
 export const START_CONVERSATION = `START_CONVERSATION`;
-export const startConversation = (availableConversationData) => ({
+export const startConversation = (conversationData) => ({
     type : START_CONVERSATION,
-    conversationData : availableConversationData,
+    conversationData : conversationData,
 });
 
 export const DISPLAY_ERROR = `DISPLAY_ERROR`;
@@ -71,40 +73,88 @@ export const resetComponent = () => ({
 
 // Intermediary functions
 
-export const checkConversationAvailability = (conversationId, userId) => {
-    // !!!! make a GET fetch request to the server to see if conversationId still has status 'available' = true;
-    return TEMP_CONVERSATION_AVAILABILITY_STATUS;
-};
-// make a fetch(POST) the conversation has found a 2nd member too (set available = false, or just remove from the availableConversation database
-// and send a response to the awaiting 2nd member, sending them into conversation as well.)
-
-export const prepareConversation = (availableConversationData) => dispatch => {
-    // availableConversationData should have conversationId, hostUserId, topicId, topicName.
-    dispatch(displayLoading());
-    /* for when asynchonous calls are brought in.
-    checkConversationAvailability(availableConversationData.conversationId)
+export const getAvailableConversationsList = () => dispatch => {
+    // Retrieves the availableConversations with the status = 'available'.
+    console.log(`run getAvailableConversationList`);
+    let conversationList;
+    fetch(`${API_BASE_URL}/availableConversations`, {
+        method : 'GET'
+    })
     .then(res => normalizeResponseErrors(res))
     .then(res => res.json())
-    .then({available} => {!!!!})
-    .catch(err => {!!!!});
-    */
-    if (checkConversationAvailability(availableConversationData.conversationId).available) {   // .available is boolean
-        dispatch(startConversation(availableConversationData));
-    } else {
-        if (TEMP_CONVERSATION_AVAILABILITY_STATUS.error) {
-            dispatch(displayError(TEMP_CONVERSATION_AVAILABILITY_STATUS));
-        }
-        dispatch(getAvailableConversationsList());
-    }
+    .then(conversationList => {
+        console.log(`getAvailableConversationList. conversationList=`, conversationList);
+        dispatch(displayAvailableConversationsList(conversationList));
+    })
+    .catch(err => {
+        console.log(`getAvailableConversationList. err=`, err);
+    });
 };
 
-export const getAvailableConversationsList = () => dispatch => {
-    // !!!! Make a fetch GET request here to get the conversationAvailableList.
-    /* for when asynchonous calls are brought in.
-    .then()
-    .catch()
-    */
-    const conversationList = TEMP_CONVERSATIONS_AVAILABLE_LIST.conversationList;
-    console.log(`getAvailableConversatoinList in actions. conversationList = `, conversationList);
-    dispatch(displayAvailableConversationsList(conversationList));
+export const prepareConversation = (conversationId, userId, username) => dispatch => {
+    // conversationData should have conversationId, hostUserId, hostUsername, userId, username, topicId, topicName.
+    dispatch(displayLoading());
+    console.log(`ran prepareConversation. conversationId=`, conversationId);
+    return checkConversationAvailability(conversationId)
+    .then(res => {
+        console.log(`prepareconversation. res=`, res);
+        if (res.status === `unavailable`) {
+            dispatch(getAvailableConversationsList());
+        } else if (res.status === `joined` && verifyHaveConversationData(res)) {
+            const conversationData = combineConversationData(res, userId, username);
+            console.log('prepareConversation. in joined. conversationData=', conversationData);
+            dispatch(startConversation(conversationData));
+        } else {
+            console.log(`prepareConversation. res=`, res);
+            if (res.error) {
+                dispatch(displayError(res.error));
+            }
+        }
+    })
+    .catch(err => {
+        console.log(`prepareconversation. err=`, err);
+    });
 };
+
+const checkConversationAvailability = (conversationId) => {
+    // make a fetch(PUT) request to set the availableConversation's status on server to 'closed', if it's available.  !! this will inform the 2nd member too
+    // if that the status was not 'available' when making the request, we receive that notification too.
+    return (
+        fetch(`${API_BASE_URL}/availableConversations/${conversationId}`, {
+            method: 'PUT',
+            headers : {
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify({
+                conversationId : conversationId,
+                status : 'joined'
+            })
+        })
+        .then(res => normalizeResponseErrors(res))
+        .then(res => res.json())
+        .then(res => {
+            console.log(`checkConvesationAvailablitliy. res=`, res);
+            return res;
+        })
+    );
+};
+
+const verifyHaveConversationData = res => {
+    const keys = [`conversationId`,`hostUserId`,`hostUsername`,`topicId`,`topicName`,`status`];
+    keys.forEach(key => {
+        if (!res.hasOwnProperty(key)) {
+            return false;
+        }
+    });
+    return true;
+}
+
+const combineConversationData = (res, userId, username) => ({
+    conversationId : res.conversationId,
+    hostuserId : res.hostUserId,
+    hostUsername : res.hostUsername,
+    guestuserId : userId,
+    guestUsername : username,
+    topicId : res.topicId,
+    topicName : res.topicName
+});

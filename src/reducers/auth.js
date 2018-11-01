@@ -23,7 +23,9 @@ export default function reducer(state = initialState, action) {
     } else if (action.type === CLEAR_AUTH) {
         return Object.assign({}, state, {
             authToken: null,
-            currentUser: null
+            currentUser: null,
+            userId : null,
+            username : null
         });
     } else if (action.type === AUTH_REQUEST) {
         return Object.assign({}, state, {
@@ -31,6 +33,7 @@ export default function reducer(state = initialState, action) {
             error: null
         });
     } else if (action.type === AUTH_SUCCESS) {
+        console.log('action.currentUser=',action.currentUser);
         return Object.assign({}, state, {
             loading: false,
             currentUser: action.currentUser

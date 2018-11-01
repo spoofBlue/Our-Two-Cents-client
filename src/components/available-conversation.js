@@ -8,6 +8,7 @@ export default function AvailableConvesation(props) {
         const availableConversationData = {
             conversationId : props.conversationId, 
             hostUserId: props.hostUserId,
+            hostUsername : props.hostUsername,
             topicId : props.topicId, 
             topicName : props.topicName 
         };
@@ -16,8 +17,9 @@ export default function AvailableConvesation(props) {
 
     return (
         <li className="available-conversation-item">
-            <h3 className="topic">{props.topicName}</h3>
-            <p className="viewpoint">{props.userViewpoint}</p>
+            <h3 className="available-conversation-topicName">{props.topicName}</h3>
+            <p className="available-conversation-hostUsername">{props.hostUsername}</p>
+            <p className="available-conversation-hostViewpoint">{props.hostViewpoint}</p>
             <button className="start-conversation-button" onClick={onClick}>Start Conversation</button>
         </li>
     );

@@ -13,10 +13,11 @@ import ChooseViewpointSection from './choose-viewpoint-section';
 import WaitingSection from './waiting-section';
 
 export class CreateConversationSection extends React.Component {
+    /*  Topiclist is currently client-side.  If I wish to make it server-side, this will be necessary.
     componentDidMount() {
-        console.log(`component did mount`);
         this.props.dispatch(getTopicList())
     }
+    */
 
     componentWillUnmount() {
         if (this.props.conversationCreated) {
@@ -34,8 +35,9 @@ export class CreateConversationSection extends React.Component {
         this.props.dispatch(cancelViewpointSection());
     }
 
-    onViewpointSubmit(viewpointChosenData) {
-        const newCreateConvoData = {...this.props.createConvoData, ...viewpointChosenData, userId : this.props.userId, username : this.props.username};
+    onViewpointSubmit(viewpointData) {
+        const newCreateConvoData = {...this.props.createConvoData, hostViewpoint : viewpointData.viewpoint, 
+            hostUserId : this.props.currentUser.userId, hostUsername : this.props.currentUser.username};
         this.props.dispatch(processViewpointChosen(newCreateConvoData));
     }
 
@@ -66,7 +68,7 @@ export class CreateConversationSection extends React.Component {
 
 CreateConversationSection.propTypes = {
     topicList : PropTypes.array,
-    createConvoData : PropTypes.object,
+    createConvoData : PropTypes.object,  // topicId, topicName, hostUserId, hostUsername, hostViewpoint
     topicChosenOnly : PropTypes.bool,
     conversationCreated : PropTypes.bool,
     loading : PropTypes.bool,
@@ -76,8 +78,7 @@ CreateConversationSection.propTypes = {
 const mapStateToProps = state => {
     console.log(`in mapStateToProps. state.createConvo= `, state.createconvo);
     return ({
-        userId : state.auth.userId,
-        username : state.auth.username,
+        currentUser : state.auth.currentUser,
         topicList : state.createconvo.topicList,
         createConvoData : state.createconvo.createConvoData,
         topicChosenOnly : state.createconvo.topicChosenOnly,
