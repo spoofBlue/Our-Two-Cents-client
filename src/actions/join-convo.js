@@ -2,45 +2,15 @@
 import {API_BASE_URL} from '../config';
 import {normalizeResponseErrors} from './utils';
 
-// Temporary Globals replacing fetched data.
-const TEMP_CONVERSATION_AVAILABILITY_STATUS = {
-    available : true
-};
-
-const TEMP_CONVERSATIONS_AVAILABLE_LIST = {
-    conversationList : [{
-        conversationId : '11111',
-        hostUserId : `AAAAA`,
-        hostUsername : 'Laura K.',
-        topicId : '1',
-        topicName : `Abortion`,
-        userViewpoint : `I believe it should be illegal, under any circumstance.`,
-    }, {
-        conversationId : '11112',
-        hostUserId : `BBBBB`,
-        hostUsername : 'Paul S.',
-        topicId : '2',
-        topicName : `Gun Control`,
-        userViewpoint : `I believe we need to ban all firearms in this country.`,
-    }, {
-        conversationId : '11113',
-        hostUserId : `CCCCC`,
-        hostUsername : 'Randal M.',
-        topicId : '3',
-        topicName : `Immigration Reform`,
-        userViewpoint : `I don't think we're doing enough to vet immigrants from coming into the country.`,
-    }
-]};
-
-/*
-conversationId : this._id,
-        hostUserId : this.hostUserId,
-        hostUsername : this.hostUsername,
-        hostViewpoint : this.hostViewpoint,
-        topicId : this.topicId,
-        topicName : this.topicName,
-        status : this.status
-        */
+/* A topic has these properties before user interacts with it.
+    conversationId : this._id,
+    hostUserId : this.hostUserId,
+    hostUsername : this.hostUsername,
+    hostViewpoint : this.hostViewpoint,
+    topicId : this.topicId,
+    topicName : this.topicName,
+    status : this.status
+*/
 
 // Actions
 export const DISPLAY_LOADING = `DISPLAY_LOADING`;
@@ -48,10 +18,10 @@ export const displayLoading = () => ({
     type : DISPLAY_LOADING,
 });
 
-export const START_CONVERSATION = `START_CONVERSATION`;
-export const startConversation = (conversationData) => ({
-    type : START_CONVERSATION,
-    conversationData : conversationData,
+export const MOVE_TO_CONVERSATION = `MOVE_TO_CONVERSATION`;
+export const moveToConversation = (conversationId) => ({
+    type : MOVE_TO_CONVERSATION,
+    conversationId
 });
 
 export const DISPLAY_ERROR = `DISPLAY_ERROR`;
@@ -71,12 +41,9 @@ export const resetComponent = () => ({
     type : RESET_COMPONENT
 });
 
-// Intermediary functions
-
 export const getAvailableConversationsList = () => dispatch => {
     // Retrieves the availableConversations with the status = 'available'.
     console.log(`run getAvailableConversationList`);
-    let conversationList;
     fetch(`${API_BASE_URL}/availableConversations`, {
         method : 'GET'
     })
@@ -92,10 +59,11 @@ export const getAvailableConversationsList = () => dispatch => {
 };
 
 export const prepareConversation = (conversationId, userId, username) => dispatch => {
-    // conversationData should have conversationId, hostUserId, hostUsername, userId, username, topicId, topicName.
+    // Central function to verify conversation is still available, success means user 
+    // ConversationData should have conversationId, hostUserId, hostUsername, topicId, topicName.
     dispatch(displayLoading());
     console.log(`ran prepareConversation. conversationId=`, conversationId);
-    return checkConversationAvailability(conversationId)
+    checkConversationAvailability(conversationId)
     .then(res => {
         console.log(`prepareconversation. res=`, res);
         if (res.status === `unavailable`) {
@@ -121,11 +89,11 @@ const checkConversationAvailability = (conversationId) => {
     // if that the status was not 'available' when making the request, we receive that notification too.
     return (
         fetch(`${API_BASE_URL}/availableConversations/${conversationId}`, {
-            method: 'PUT',
+            method : 'PUT',
             headers : {
                 'Content-Type' : 'application/json'
             },
-            body: JSON.stringify({
+            body : JSON.stringify({
                 conversationId : conversationId,
                 status : 'joined'
             })
@@ -135,6 +103,9 @@ const checkConversationAvailability = (conversationId) => {
         .then(res => {
             console.log(`checkConvesationAvailablitliy. res=`, res);
             return res;
+        })
+        .catch(err => {
+            console.log(err);
         })
     );
 };
@@ -150,11 +121,52 @@ const verifyHaveConversationData = res => {
 }
 
 const combineConversationData = (res, userId, username) => ({
+    // Explicityly showing each field here shouldn't be necessary to just add userId, username. Done more for code onlookers to know what's here.
     conversationId : res.conversationId,
-    hostuserId : res.hostUserId,
+    hostUserId : res.hostUserId,
     hostUsername : res.hostUsername,
-    guestuserId : userId,
+    guestUserId : userId,
     guestUsername : username,
     topicId : res.topicId,
     topicName : res.topicName
 });
+
+const startConversation = (conversationData) => dispatch => {
+    postConversationToServer(conversationData)
+    .then(res => {
+        console.log(`startConversation. res=`, res);
+        dispatch(moveToConversation(res.conversationId));
+    })
+    .catch(err => {
+        dispatch(displayError(err));
+    });
+};
+
+const postConversationToServer = (conversationData) => {
+    // Make a POST request of conversationData into the Conversation database.
+    console.log(`fetch request will get data for `, conversationData);
+    return fetch(`${API_BASE_URL}/conversations`, {
+        method : 'POST',
+        headers : {
+            'Content-Type' : 'application/json'
+        },
+        body : JSON.stringify({
+            conversationId : conversationData.conversationId,
+            hostUserId : conversationData.hostUserId,
+            hostUsername : conversationData.hostUsername,
+            guestUserId : conversationData.guestUserId,
+            guestUsername : conversationData.guestUsername,
+            topicId : conversationData.topicId,
+            topicName : conversationData.topicName
+        })
+    })
+    .then(res => normalizeResponseErrors(res))
+    .then(res => res.json())
+    .then(res => {
+        console.log(`postConversationToServer. res=`, res);
+        return res;
+    })
+    .catch(err => {
+        return err;
+    });
+}

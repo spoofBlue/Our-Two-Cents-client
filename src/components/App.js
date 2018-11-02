@@ -16,7 +16,7 @@ import Footer from "./footer";
 import './index.css';
 
 export class App extends React.Component {
-  componentDidUpdate(prevProps) {  // !!!!
+  componentDidUpdate(prevProps) {
     if (!prevProps.loggedIn && this.props.loggedIn) {
       // When we are logged in, refresh the auth token periodically
       this.startPeriodicRefresh();
@@ -26,23 +26,23 @@ export class App extends React.Component {
     }
   }
 
-  componentWillUnmount() { // !!!!
+  componentWillUnmount() {
     this.stopPeriodicRefresh();
   }
 
-  startPeriodicRefresh() { // !!!!
+  startPeriodicRefresh() {
     this.refreshInterval = setInterval(
         () => this.props.dispatch(refreshAuthToken()),
         24 * 60 * 60 * 1000 // Can go 24 hours without refreshing.
     );
   }
 
-  stopPeriodicRefresh() {  // !!!!
+  stopPeriodicRefresh() {
     if (!this.refreshInterval) {
         return;
     }
 
-    clearInterval(this.refreshInterval);  // !!!!
+    clearInterval(this.refreshInterval);
   }
 
   onLogoutClick() {

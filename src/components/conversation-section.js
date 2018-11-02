@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import PropType from 'prop-types';
 
 // Actions
-import {initializeConversation, processSubmittedMessage, exitConversation, resetComponent} from '../actions/conversation';
+import {enterConversation, processSubmittedMessage, exitConversation, resetComponent} from '../actions/conversation';
 
 // Components
 import ConversationForm from './conversation-form';
@@ -14,7 +14,7 @@ import ConversationBoard from './conversation-board';
 
 export class ConversationSection extends React.Component {
     componentDidMount() {
-        this.props.dispatch(initializeConversation(this.props.userId,this.props.match.params.conversationId));
+        this.props.dispatch(enterConversation(this.props.match.params.conversationId, this.props.currentUser.userId, this.props.currentUser.username));
     }
 
     componentWillUnmount() {
@@ -25,20 +25,24 @@ export class ConversationSection extends React.Component {
         message.userId = this.props.userId;
         message.username = this.props.username;
         console.log(`ran sendMessage. message=`, message);
-        this.props.dispatch(processSubmittedMessage(this.props.convoData.conversationId, this.props.messageList, message));
+        this.props.dispatch(processSubmittedMessage(this.props.conversationData.conversationId, this.props.messageList, message));
     }
 
     exitConvo() {
-        this.props.dispatch(exitConversation(this.props.convoData));
+        this.props.dispatch(exitConversation(this.props.conversationData));
     }
 
     render() {
+        if (!this.props.loggedIn) {
+            return <Redirect to="/login" />;
+        }
+        console.log(`conversation-section. this.props.conversationData=`, this.props.conversationData);
         if (this.props.leaveConversation) {
             return (<Redirect to='/home' />);
         }
         return (
             <section className="conversation-section">
-                <h2>Your conversation with {this.props.convoData.otherPersonUsername}: {this.props.convoData.topicName}</h2>
+                <h2>Your conversation with {this.props.conversationData.otherPersonUsername}: {this.props.conversationData.topicName}</h2>
                 <ConversationBoard {...this.props} />
                 <ConversationForm sendMessage={message => this.sendMessage(message)} />
                 <button className="leave-conversation-button" onClick={() => this.exitConvo()}>Leave Conversation</button>
@@ -48,32 +52,31 @@ export class ConversationSection extends React.Component {
 }
 
 ConversationSection.propType = {
-    userId : PropType.string.isRequired,
-    username : PropType.string.isRequired,
-    convoData : {
-        conversationId : PropType.string.isRequired,
+    currentUser : PropType.object.isRequired,
+    conversationData : {
+        conversationId : PropType.string,
         otherPersonId : PropType.string,
         otherPersonUsername : PropType.string,
         topicName : PropType.string,
         topicId : PropType.string
     },
     messageList : PropType.array,
-    conversationStarted : PropType.bool,
-    conversationFinished : PropType.bool,
-    leaveConversation : PropType.bool
+    conversationStarted : PropType.bool.isRequired,
+    conversationFinished : PropType.bool.isRequired,
+    leaveConversation : PropType.bool.isRequired
 }
 
 const mapStateToProps = state => {
     console.log(state.convo);
     return {
-        userId : state.auth.userId,
-        username : state.auth.username,
-        convoData : {
-            conversationId : state.convo.convoData.conversationId,
-            otherPersonUserId : state.convo.convoData.otherPersonUserId,
-            otherPersonUsername : state.convo.convoData.otherPersonUsername,
-            topicId : state.convo.convoData.topicId,
-            topicName : state.convo.convoData.topicName
+        currentUser : state.auth.currentUser,
+        loggedIn: state.auth.currentUser !== null,
+        conversationData : {
+            conversationId : state.convo.conversationData.conversationId,
+            otherPersonUserId : state.convo.conversationData.otherPersonUserId,
+            otherPersonUsername : state.convo.conversationData.otherPersonUsername,
+            topicId : state.convo.conversationData.topicId,
+            topicName : state.convo.conversationData.topicName
         },
         messageList : state.convo.messageList,
         conversationStarted : state.convo.conversationStarted,

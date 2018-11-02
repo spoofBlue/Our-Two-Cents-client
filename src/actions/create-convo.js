@@ -41,6 +41,12 @@ export const removeWaitingSection = () => ({
     type : REMOVE_WAITING_SECTION
 });
 
+export const MOVE_TO_CONVERSATION = `MOVE_TO_CONVERSATION`;
+export const moveToConversation = (conversationId) => ({
+    type : MOVE_TO_CONVERSATION,
+    conversationId
+});
+
 export const DISPLAY_ERROR = `DISPLAY_ERROR`;
 export const displayError = status => ({
     type : DISPLAY_ERROR,
@@ -74,18 +80,18 @@ export const cancelViewpointSection = () => dispatch => {
 };
 
 export const processViewpointChosen = (createConvoData) => dispatch => {
-    // When the user does a submit event in the Viewpoint section, posts the availableConversation onto the server with createConvoData, shows the Waiting Section component.
+    // When the user does a submit event in the Viewpoint section, posts the availableConversation onto the server with createConvoData, 
+    // shows the Waiting Section component.
     console.log(`ran postAvailableConversation. createConvoData=`, createConvoData);
     dispatch(displayLoading());
-    dispatch(createAvailableConversation(createConvoData));
+    return dispatch(createAvailableConversation(createConvoData));
 };
 
 export const createAvailableConversation = (createConvoData) => dispatch => {
     // The specific POST request to availableConversations database.
     // Will also receive a response giving us a conversationId to add into createConvoData.
     console.log(`createAvailableConversation. createConvoData=`, createConvoData);
-    dispatch(displayLoading());
-    fetch(`${API_BASE_URL}/availableConversations`, {
+    return fetch(`${API_BASE_URL}/availableConversations`, {
         method : 'POST',
         headers : {
             'Content-Type' : 'application/json'
@@ -159,4 +165,36 @@ export const cancelAvailableConversation = (createConvoData) => dispatch => {
         console.log(err);
         return displayError(err);
     });
+};
+
+export const checkAvailableConversationStatus = (conversationId) => dispatch => {
+    // Checks on availableConversation's status on server. If status is now 'joined', then 2nd member accepted conversation.
+    // Moves user to the conversation section.
+    console.log(`ran getAvailableConversationStatus. conversationId=`, conversationId);
+    checkConversationJoined(conversationId)
+    .then(res => {
+        console.log(`getAvailableConversationStatus. res=`, res);
+        if (res.status === `joined`) {
+            dispatch(moveToConversation(conversationId));
+        }
+    })
+    .catch(err => {
+        console.log(`getAvailableConversationStatus. err=`, err);
+    });
+}
+
+const checkConversationJoined = (conversationId) => {
+    // make a fetch(GET) request to check the availableConversation's status on server.
+    return fetch(`${API_BASE_URL}/availableConversations/${conversationId}`, {
+        method : 'GET'
+    })
+    .then(res => normalizeResponseErrors(res))
+    .then(res => res.json())
+    .then(res => {
+        console.log(`checkConvesationAvailablitliy. res=`, res);
+        return res;
+    })
+    .catch(err => {
+        console.log(err);
+    })
 };

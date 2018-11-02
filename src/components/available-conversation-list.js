@@ -30,13 +30,16 @@ export class AvailableConversationList extends React.Component {
             return <Redirect to="/login" />;
         }
         if (this.props.conversationStarted) {
-            const route = `/conversation/${this.props.conversationData.conversationId}`;
+            const route = `/conversation/${this.props.conversationRoute}`;
             return (<Redirect to={route} />);
         }
         console.log(`render() this.props= `, this.props);
-        const conversationList = this.props.conversationList.map((convo, index) => 
-            <AvailableConversation {...convo} key={index} startConversation={availableConversationData => this.startConversation(availableConversationData)} />
-        );
+        const conversationList = this.props.conversationList.map((convo, index) => {
+            if (convo.hostUserId === this.props.currentUser.userId) {
+                return null;
+            }
+            return (<AvailableConversation {...convo} key={index} startConversation={availableConversationData => this.startConversation(availableConversationData)} />);
+        });
         let error;
         let loading;
         if (this.props.error) {
@@ -62,10 +65,10 @@ const mapStateToProps = state => {
     console.log(`in mapStateToProps. state = `, state);
     console.log(`in mapStateToProps. state.joinConvo = `, state.joinconvo);
     return ({
-        loggedIn: state.auth.currentUser !== null,
         currentUser : state.auth.currentUser,
+        loggedIn: state.auth.currentUser !== null,
         conversationList : state.joinconvo.conversationList,
-        conversationData : state.joinconvo.conversationData,
+        conversationRoute : state.joinconvo.conversationRoute,
         conversationStarted : state.joinconvo.conversationStarted,
         loading : state.joinconvo.loading,
         error : state.joinconvo.error

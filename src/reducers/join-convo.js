@@ -1,12 +1,12 @@
 
 // Actions
-import {DISPLAY_LOADING, START_CONVERSATION, DISPLAY_ERROR, DISPLAY_AVAILABLE_CONVERSATIONS_LIST, RESET_COMPONENT} from '../actions/join-convo';
+import {DISPLAY_LOADING, MOVE_TO_CONVERSATION, DISPLAY_ERROR, DISPLAY_AVAILABLE_CONVERSATIONS_LIST, RESET_COMPONENT} from '../actions/join-convo';
 
 // Initial
 const initialState = {
     conversationStarted : false,
     conversationList : [],
-    conversationData : {},
+    conversationRoute : "",
     loading : false,
     error : null
 }
@@ -23,11 +23,10 @@ export default function joinConvoReducer(state=initialState, action) {
             loading : false,
             error : action.error
         });
-    } else if (action.type === START_CONVERSATION) {
+    } else if (action.type === MOVE_TO_CONVERSATION) {
         return Object.assign({}, state, {
             conversationStarted : true,
-            conversationData : action.conversationData,
-            conversationList : [],
+            conversationRoute : action.conversationId,
             loading : false,
             error : null
         });
@@ -39,7 +38,6 @@ export default function joinConvoReducer(state=initialState, action) {
             error : null
         });
     } else if (action.type === RESET_COMPONENT) {
-        console.log(`ran displayAvailableConversationList from within reducer. action.conversationList = `, action.conversationList);
         return Object.assign({}, state, {
             conversationStarted : false,
             conversationData : {},

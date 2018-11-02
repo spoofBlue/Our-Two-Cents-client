@@ -1,14 +1,15 @@
 
 // Actions
-import {DISPLAY_CONVERSATION_STARTED, DISPLAY_MESSAGE_LIST, UPDATE_CONVO_DATA, DISPLAY_CONVERSATION_FINISHED, DISPLAY_CONVERSATION_LEAVING, RESET_COMPONENT} from '../actions/conversation';
+import {DISPLAY_CONVERSATION_STARTED, DISPLAY_MESSAGE_LIST, UPDATE_CONVERSATION_DATA, DISPLAY_CONVERSATION_FINISHED, 
+    DISPLAY_CONVERSATION_LEAVING, RESET_COMPONENT} from '../actions/conversation';
 
 // Reducer
 
 const initialState = {
-    convoData : {
+    conversationData : {
         conversationId : "",
-        yourUsername : "",
-        otherUsername : "",
+        otherPersonId : "",
+        otherPersonUsername : "",
         topicName : "",
         topicId : "",
     },
@@ -31,9 +32,9 @@ export default function conversationReducer(state=initialState, action) {
             loading : false,
             error : false
         });
-    } else if (action.type === UPDATE_CONVO_DATA) {
+    } else if (action.type === UPDATE_CONVERSATION_DATA) {
         return Object.assign({}, state, {
-            convoData : action.convoData,
+            conversationData : action.conversationData,
             loading : false,
             error : false
         });
@@ -54,7 +55,7 @@ export default function conversationReducer(state=initialState, action) {
             conversationStarted : false,
             conversationFinished : false,
             leaveConversation : false,
-            convoData : {},
+            conversationData : {},
             messageList : [],
             loading : false,
             error : false
