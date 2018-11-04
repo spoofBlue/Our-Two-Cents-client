@@ -24,16 +24,18 @@ export class CreateConversationSection extends React.Component {
     componentWillUnmount() {
         this.stopPeriodicCheck();
         if (this.props.conversationCreated) {
-            this.props.dispatch(cancelConversationResetComponent(this.props.createConvoData));
+            console.log(`attempt to cancel conversation, reset component`);
+            cancelAvailableConversation(this.props.createConvoData);
+            this.props.dispatch(resetComponent());
         } else {
-            this.props.dispatch(resetComponent);
+            this.props.dispatch(resetComponent());
         }
     }
 
     onClickTopic(topicChosenData) {
         this.stopPeriodicCheck();
         if (this.props.conversationCreated) {
-            this.props.dispatch(cancelAvailableConversation(this.props.createConvoData))
+            cancelAvailableConversation(this.props.createConvoData)
             .then(() => {
                 this.props.dispatch(processTopicChosen(topicChosenData));
             });

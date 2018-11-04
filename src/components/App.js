@@ -3,7 +3,7 @@ import React from 'react';
 import {withRouter, Route, Redirect, Switch} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {refreshAuthToken, logout} from '../actions/auth';
-import {initializeSendBird, accessSendBird, exitSendBird} from '../actions/sendbird';
+import {initializeSendBird, accessSendBird} from '../actions/sendbird';
 
 import LandingPageSection from './landing-page-section';
 import LoginSection from './login-section';

@@ -1,7 +1,7 @@
 
 import {API_BASE_URL} from '../config';
 import {normalizeResponseErrors} from './utils';
-import {createSendBirdChannel, inviteToSendBirdChannel } from './sendbird';
+import {createSendBirdChannel, setSendBirdChannelPreference, inviteToSendBirdChannel } from './sendbird';
 
 /* A topic has these properties before user interacts with it.
     conversationId : this._id,
@@ -137,13 +137,15 @@ const startConversation = (conversationData) => dispatch => {
         resolve(createSendBirdChannel(conversationData));
     });
 
-    establishChannelCreation
+    return establishChannelCreation
+    .then(() => setSendBirdChannelPreference())
     .then(() => inviteToSendBirdChannel(conversationData))
     .then(() => {
         console.log(`in startConversation. create, invite channel complete.`);
         dispatch(moveToConversation(conversationData.conversationId));
     })
     .catch(err => {
+        console.log(`startConversation. err=`, err);
         dispatch(displayError(err));
     });
 };

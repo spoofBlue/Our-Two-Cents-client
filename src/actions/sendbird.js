@@ -1,18 +1,18 @@
 
 import SendBird from 'sendbird';
 
-let sendbird;
+let SENDBIRD;
 let GROUP_CHANNEL;
 
 export const initializeSendBird = () => {
     console.log(`sendbird. initializeSendBird`);
-    sendbird = new SendBird({appId: 'BDEEA390-7760-4E15-8C9B-06C311285004'});
+    SENDBIRD = new SendBird({appId: 'BDEEA390-7760-4E15-8C9B-06C311285004'});
 }
 
 // !!!! Update the nicknames of the people that join.
 export const accessSendBird = (userId, username = "Dummy name.") => {
     console.log(`sendbird. accessSendBird. userId=`, userId);
-    sendbird.connect(userId, function(user, error) {
+    SENDBIRD.connect(userId, function(user, error) {
         console.log(`sendbird. accessSendBird user=`, user);
         if (error) {
             console.log(`sendbird. accessSendBird. error=`, error);
@@ -23,7 +23,7 @@ export const accessSendBird = (userId, username = "Dummy name.") => {
 
 export const createSendBirdChannel = (conversationData) => {
     console.log(`sendbird. createSendBirdChannel`);
-    let params = new sendbird.GroupChannelParams();
+    let params = new SENDBIRD.GroupChannelParams();
     params.isPublic = false;
     params.isEphemeral = false;
     params.isDistinct = false;
@@ -35,15 +35,12 @@ export const createSendBirdChannel = (conversationData) => {
     //params.customType = CUSTOM_TYPE;
     params.data = {hostUsername : conversationData.hostUsername, guestUsername : conversationData.guestUsername};
     
-
-    sendbird.GroupChannel.createChannel(params, function(groupChannel, error) {
-        console.log(`sendbird. createSendBirdChannel. groupChannel=`, groupChannel);
-        if (error) {
-            console.log(`createSendBirdChannel error=`, error);
-            return;
-        }
-        GROUP_CHANNEL = groupChannel;
-        return GROUP_CHANNEL;
+    return new Promise((resolve, reject) => {
+        SENDBIRD.GroupChannel.createChannel(params, function(groupChannel, error) {
+            console.log(`sendbird. createSendBirdChannel groupChannel=`, groupChannel);
+            GROUP_CHANNEL = groupChannel;
+        error ? reject(error) : resolve(groupChannel);
+        });
     });
 }
 
@@ -52,31 +49,33 @@ export const inviteToSendBirdChannel = (conversationData) => {
     // Do after createSendBirdChannel
     let userIds = [conversationData.hostUserId, conversationData.guestUserId];
 
-    GROUP_CHANNEL.inviteWithUserIds(userIds, function(response, error) {
-        console.log(`sendbird. inviteToSendBirdChannel. response=`, response);
-        if (error) {
-            console.log(`sendbird. inviteToSendBirdChannel. error=`, error);
-            return;
-        }
-        return;
+    return new Promise((resolve, reject) => {
+        GROUP_CHANNEL.inviteWithUserIds(userIds, function(response, error) {
+            console.log(`sendbird. inviteToSendBirdChannel. response=`, response);
+            error ? reject(error) : resolve(response);
+        });
+    })
+}
+
+export const setSendBirdChannelPreference = () => {
+    console.log(`sendbird. setSendBirdChannelPrefernce.`);
+    let autoAccept = true;    // If true, a user will automatically join a group channel with no choice of accepting and declining an invitation.
+    return new Promise((resolve, reject) => {
+        SENDBIRD.setChannelInvitationPreference(autoAccept, function(response, error) {
+            console.log(`sendbird. setSendBirdChannelPreference. response=`, response);
+            error ? reject(error) : resolve(response);
+        });
     });
 }
 
 export const acceptInviteToSendBirdChannel = () => {
     console.log(`sendbird. acceptInviteToSendBirdChannel.`);
-    let autoAccept = true;    // If true, a user will automatically join a group channel with no choice of accepting and declining an invitation.
-    sendbird.setChannelInvitationPreference(autoAccept, function(response, error) {
-        if (error) {
-            return;
-        }
-    });
-
     // Auto-accepting an invitation
-    GROUP_CHANNEL.acceptInvitation(function(response, error) {
-        console.log(`sendbird. acceptInviteToSendBirdChannel. response=`, response);
-        if (error) {
-            return;
-        }
+    return new Promise((resolve, reject) => {
+        GROUP_CHANNEL.acceptInvitation(function(response, error) {
+            console.log(`sendbird. acceptInviteToSendBirdChannel. response=`, response);
+            error ? reject(error) : resolve(response);
+        });
     });
 }
 
@@ -101,7 +100,8 @@ export const leaveSendBirdChannel = () => {
 }
 
 export const exitSendBird = () => {
-    sendbird.disconnect();
+    console.log(`sendbird. exitSendBird (connection removed, still initialized).`);
+    SENDBIRD.disconnect();
 }
 
 /* Possible use.
@@ -117,10 +117,10 @@ online: user is connected to SendBird.
 
 /*
 export const createSendBirdChannelHandler = (conversationData) => {
-    sendbird.addChannelHandler(conversationData.conversationId, ChannelHandler)
+    SENDBIRD.addChannelHandler(conversationData.conversationId, ChannelHandler)
 }
 
 export const removeSendBirdChannelHandler = (conversationData) => {
-    sendbird.removeChannelHandler(conversationData.conversationId);
+    SENDBIRD.removeChannelHandler(conversationData.conversationId);
 }
 */
