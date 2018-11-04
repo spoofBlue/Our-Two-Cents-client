@@ -8,7 +8,6 @@ import {TOPIC_LIST} from '../data/topic-list';
 // Initial
 const initialState = {
     topicList : TOPIC_LIST,
-    topicChosenData : {},
     createConvoData : {},
     topicChosenOnly : false,
     conversationCreated : false,

@@ -1,6 +1,7 @@
 
 import {API_BASE_URL} from '../config';
 import {normalizeResponseErrors} from './utils';
+import {createSendBirdChannel, inviteToSendBirdChannel } from './sendbird';
 
 /* A topic has these properties before user interacts with it.
     conversationId : this._id,
@@ -132,41 +133,27 @@ const combineConversationData = (res, userId, username) => ({
 });
 
 const startConversation = (conversationData) => dispatch => {
-    postConversationToServer(conversationData)
-    .then(res => {
-        console.log(`startConversation. res=`, res);
-        dispatch(moveToConversation(res.conversationId));
+    let establishChannelCreation = new Promise(function(resolve, reject) {
+        resolve(createSendBirdChannel(conversationData));
+    });
+
+    establishChannelCreation
+    .then(() => inviteToSendBirdChannel(conversationData))
+    .then(() => {
+        console.log(`in startConversation. create, invite channel complete.`);
+        dispatch(moveToConversation(conversationData.conversationId));
     })
     .catch(err => {
         dispatch(displayError(err));
     });
 };
 
-const postConversationToServer = (conversationData) => {
-    // Make a POST request of conversationData into the Conversation database.
-    console.log(`fetch request will get data for `, conversationData);
-    return fetch(`${API_BASE_URL}/conversations`, {
-        method : 'POST',
-        headers : {
-            'Content-Type' : 'application/json'
-        },
-        body : JSON.stringify({
-            conversationId : conversationData.conversationId,
-            hostUserId : conversationData.hostUserId,
-            hostUsername : conversationData.hostUsername,
-            guestUserId : conversationData.guestUserId,
-            guestUsername : conversationData.guestUsername,
-            topicId : conversationData.topicId,
-            topicName : conversationData.topicName
-        })
-    })
-    .then(res => normalizeResponseErrors(res))
-    .then(res => res.json())
-    .then(res => {
-        console.log(`postConversationToServer. res=`, res);
-        return res;
-    })
-    .catch(err => {
-        return err;
-    });
-}
+/*
+    conversationId : conversationData.conversationId,
+    hostUserId : conversationData.hostUserId,
+    hostUsername : conversationData.hostUsername,
+    guestUserId : conversationData.guestUserId,
+    guestUsername : conversationData.guestUsername,
+    topicId : conversationData.topicId,
+    topicName : conversationData.topicName
+*/

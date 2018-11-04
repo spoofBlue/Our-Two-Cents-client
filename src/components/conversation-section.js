@@ -22,10 +22,8 @@ export class ConversationSection extends React.Component {
     }
 
     sendMessage(message) {
-        message.userId = this.props.userId;
-        message.username = this.props.username;
         console.log(`ran sendMessage. message=`, message);
-        this.props.dispatch(processSubmittedMessage(this.props.conversationData.conversationId, this.props.messageList, message));
+        this.props.dispatch(processSubmittedMessage(message, this.props.currentUser));
     }
 
     exitConvo() {

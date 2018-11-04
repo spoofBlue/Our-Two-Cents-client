@@ -3,6 +3,7 @@ import React from 'react';
 import {withRouter, Route, Redirect, Switch} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {refreshAuthToken, logout} from '../actions/auth';
+import {initializeSendBird, accessSendBird, exitSendBird} from '../actions/sendbird';
 
 import LandingPageSection from './landing-page-section';
 import LoginSection from './login-section';
@@ -16,9 +17,17 @@ import Footer from "./footer";
 import './index.css';
 
 export class App extends React.Component {
+  componentDidMount() {
+    initializeSendBird();
+    if (this.props.loggedIn) {
+      accessSendBird(this.props.currentUser.userId);
+    }
+  }
+
   componentDidUpdate(prevProps) {
     if (!prevProps.loggedIn && this.props.loggedIn) {
       // When we are logged in, refresh the auth token periodically
+      accessSendBird(this.props.currentUser.userId);
       this.startPeriodicRefresh();
     } else if (prevProps.loggedIn && !this.props.loggedIn) {
       // Stop refreshing when we log out
@@ -84,7 +93,8 @@ export class App extends React.Component {
 
 const mapStateToProps = state => ({
   hasAuthToken: state.auth.authToken !== null,
-  loggedIn: state.auth.currentUser !== null
+  loggedIn: state.auth.currentUser !== null,
+  currentUser: state.auth.currentUser
 });
 
 export default withRouter(connect(mapStateToProps)(App));

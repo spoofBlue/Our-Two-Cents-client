@@ -60,7 +60,7 @@ export class CreateConversationSection extends React.Component {
 
     startPeriodicCheck() {
         this.refreshInterval = setInterval(
-            () => this.props.dispatch(checkAvailableConversationStatus(this.props.createConvoData.conversationId)),
+            () => this.props.dispatch(checkAvailableConversationStatus(this.props.createConvoData.conversationId, this.props.currentUser.userId)),
             5 * 1000 // Check every 5 seconds for a response.
         );
     }

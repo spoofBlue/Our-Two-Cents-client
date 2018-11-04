@@ -84,10 +84,20 @@ export const processViewpointChosen = (createConvoData) => dispatch => {
     // shows the Waiting Section component.
     console.log(`ran postAvailableConversation. createConvoData=`, createConvoData);
     dispatch(displayLoading());
-    return dispatch(createAvailableConversation(createConvoData));
+
+    return createAvailableConversation(createConvoData)
+    .then(res => {
+        console.log(`processViewpointChosen. res=`, res);
+        createConvoData.conversationId = res.conversationId;
+        console.log(`processViewpointChosen. createConvoData=`, createConvoData);
+        dispatch(updateCreateConvoData(createConvoData));
+        dispatch(removeViewpoint());
+        dispatch(displayWaitingSection());
+    })
+    .catch(err => dispatch(displayError(err)));
 };
 
-export const createAvailableConversation = (createConvoData) => dispatch => {
+export const createAvailableConversation = (createConvoData) => {
     // The specific POST request to availableConversations database.
     // Will also receive a response giving us a conversationId to add into createConvoData.
     console.log(`createAvailableConversation. createConvoData=`, createConvoData);
@@ -106,23 +116,17 @@ export const createAvailableConversation = (createConvoData) => dispatch => {
     })
     .then(res => normalizeResponseErrors(res))
     .then(res => res.json())
-    .then(res => {
-        console.log(`createAvailableConversation. res=`, res);
-        createConvoData.conversationId = res.conversationId;
-        dispatch(updateCreateConvoData(createConvoData));
-        dispatch(removeViewpoint());
-        dispatch(displayWaitingSection());
-    })
+    .then(res => res)
     .catch(err => {
         console.log(err);
-        displayError(err);
+        return err;
     });
 };
 
 export const cancelWaitingSection = (createConvoData) => dispatch => {
     // Handles event of user cancelling the conversation through an onClick event, or unmounting the component while the Waiting Section is up.
     dispatch(displayLoading());
-    dispatch(cancelAvailableConversation(createConvoData))
+    cancelAvailableConversation(createConvoData)
     .then(() => {
         const topicOnlyData = {
             topicId : createConvoData.topicId,
@@ -139,11 +143,11 @@ export const cancelWaitingSection = (createConvoData) => dispatch => {
 };
 
 export const cancelConversationResetComponent = (createConvoData) => dispatch => {
-    dispatch(cancelAvailableConversation(createConvoData));
+    cancelAvailableConversation(createConvoData);
     dispatch(resetComponent());
 }
 
-export const cancelAvailableConversation = (createConvoData) => dispatch => {
+export const cancelAvailableConversation = (createConvoData) => {
     // Make a fetch(POST) request with createConvoData.conversationId to remove this available conversation from databse/ others visibility.
     return fetch(`${API_BASE_URL}/availableConversations/${createConvoData.conversationId}`, {
         method : 'PUT',
@@ -163,23 +167,23 @@ export const cancelAvailableConversation = (createConvoData) => dispatch => {
     })
     .catch(`cancelAvailableConversation. err=`, err => {
         console.log(err);
-        return displayError(err);
+        return err;
     });
 };
 
-export const checkAvailableConversationStatus = (conversationId) => dispatch => {
+export const checkAvailableConversationStatus = (conversationId, userId) => dispatch => {
     // Checks on availableConversation's status on server. If status is now 'joined', then 2nd member accepted conversation.
     // Moves user to the conversation section.
-    console.log(`ran getAvailableConversationStatus. conversationId=`, conversationId);
+    console.log(`ran checkAvailableConversationStatus. conversationId=`, conversationId);
     checkConversationJoined(conversationId)
     .then(res => {
-        console.log(`getAvailableConversationStatus. res=`, res);
+        console.log(`checkAvailableConversationStatus. res=`, res);
         if (res.status === `joined`) {
             dispatch(moveToConversation(conversationId));
         }
     })
     .catch(err => {
-        console.log(`getAvailableConversationStatus. err=`, err);
+        console.log(`checkAvailableConversationStatus. err=`, err);
     });
 }
 

@@ -5,6 +5,7 @@ import {SubmissionError} from 'redux-form';
 import {API_BASE_URL} from '../config';
 import {normalizeResponseErrors} from './utils';
 import {saveAuthToken, clearAuthToken} from '../local-storage';
+import {exitSendBird} from './sendbird';
 
 export const SET_AUTH_TOKEN = 'SET_AUTH_TOKEN';
 export const setAuthToken = authToken => ({
@@ -44,7 +45,7 @@ const storeAuthInfo = (authToken, dispatch) => {
 
 export const login = (userEmail, password) => dispatch => {
     dispatch(authRequest());
-    const username = userEmail; //jwt is strict, wants 'username'.  Letting code reviewer know that this was originally userEmail before renaming.
+    const username = userEmail; //jwt is strict, wants 'username'.  Letting code onlooker know that this was originally userEmail before renaming.
     return (
         fetch(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
@@ -59,7 +60,9 @@ export const login = (userEmail, password) => dispatch => {
         // Reject any requests which don't return a 200 status, creating errors which follow a consistent format.
         .then(res => normalizeResponseErrors(res))
         .then(res => res.json())
-        .then(({authToken}) => storeAuthInfo(authToken, dispatch))
+        .then(({authToken}) => {
+            storeAuthInfo(authToken, dispatch)
+        })
         .catch(err => {
             const {code} = err;
             const message =
@@ -99,6 +102,7 @@ export const refreshAuthToken = () => (dispatch, getState) => {
 };
 
 export const logout = () => (dispatch, getState) => {
+    exitSendBird();
     const authToken = getState().auth.authToken;
     dispatch(clearAuth());
     clearAuthToken(authToken);
