@@ -7,6 +7,4 @@ deploy:
   provider: heroku
   api_key:
     secure: MJn1YHfqpc1Frv1LFluxcIAuM0WxsMZ3uiz+eJPknGV19mi5HbmmyAZkfwzWbelJWvaSFx7H5B7FG7eMc4uDSwUXxTF1S7RdBZXselE6EK12mwP+Sp8GTXccnUWZwksiRwqpyHQbueBvb3+fSAL+ACo9C3whKQE9YcZtUauecUxxDHQWAGWQpuixCsllRTTBDzqLXv0Df/UJYH9YWe77QLI/Ec5sXuCD4uy6lUz0Q9jwBqgZUyyndFf4q/5knJlD8qbvyHSQ0HNqdjWugPuYqXJY6BO8SSI+CQhC6cXmzGs0XJU+LkMcUsx+NUnfWFaG7G8i3EPMAk21Q3ekyNmbOIOBMcrjNFX6Clynqv4gRT72huZoWESpR+cOUNvRekyZoQ9FOCOaQ4zPjQjNIYZzPrv2aPIEr4XFzPftn5cnhqXQw15M7qoR/YGZUXN5YXTE56f+xlQrekmnIyo+bwFF/8wePoW+WpA8e9ldxaVEepUfPHGM9fslFofpFgbkGPk/fzi3qcF9BugiA1G/GwKA2P+kjLiHKBp1Pkw7o7PC6eHrTvhHWv8ZR32MldOKCmSni1/waZaoIBJgM1CvAQjgb0UPo4fjcawImmj+e+3FJYrhJmx7+26jW4/2spAlgIv/eaxeCkKo7cCDxfUb46i5KnJs/UEtvj0i9hEs8WQB6tc=
-  app: Our-Two-Cents-client
-  on:
-    repo: spoofBlue/Our-Two-Cents-client
+  app: damp-mesa-79990
