@@ -16,7 +16,8 @@
     "redux": "^4.0.1",
     "redux-form": "^7.4.2",
     "redux-thunk": "^2.3.0",
-    "sendbird": "^3.0.83"
+    "sendbird": "^3.0.83",
+    "travis": "^0.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
