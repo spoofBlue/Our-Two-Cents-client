@@ -37,6 +37,7 @@ export const resetComponent = () => ({
 });
 
 export const enterConversation = (conversationId, userId, username) => dispatch => {
+    /*
     let acceptChannel = new Promise(function(resolve, reject) {
         resolve(acceptInviteToSendBirdChannel());
     });
@@ -44,11 +45,11 @@ export const enterConversation = (conversationId, userId, username) => dispatch 
     return acceptChannel
     .then(() => {
         console.log(`enterConversation. accepted channel`);
-        dispatch(displayConversationStarted());
-    })
+     */   dispatch(displayConversationStarted());
+    /*})
     .catch(err => {
         dispatch(displayError(err));
-    });
+    });*/
 }
 // Exit Conversation
 
