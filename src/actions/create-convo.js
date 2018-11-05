@@ -101,7 +101,7 @@ export const createAvailableConversation = (createConvoData) => {
     // The specific POST request to availableConversations database.
     // Will also receive a response giving us a conversationId to add into createConvoData.
     console.log(`createAvailableConversation. createConvoData=`, createConvoData);
-    return fetch(`${API_BASE_URL}/availableConversations`, {
+    return fetch(`${API_BASE_URL}/api/availableConversations`, {
         method : 'POST',
         headers : {
             'Content-Type' : 'application/json'
@@ -149,7 +149,7 @@ export const cancelConversationResetComponent = (createConvoData) => dispatch =>
 
 export const cancelAvailableConversation = (createConvoData) => {
     // Make a fetch(POST) request with createConvoData.conversationId to remove this available conversation from databse/ others visibility.
-    return fetch(`${API_BASE_URL}/availableConversations/${createConvoData.conversationId}`, {
+    return fetch(`${API_BASE_URL}/api/availableConversations/${createConvoData.conversationId}`, {
         method : 'PUT',
         headers : {
             'Content-Type' : 'application/json'
@@ -189,7 +189,7 @@ export const checkAvailableConversationStatus = (conversationId, userId) => disp
 
 const checkConversationJoined = (conversationId) => {
     // make a fetch(GET) request to check the availableConversation's status on server.
-    return fetch(`${API_BASE_URL}/availableConversations/${conversationId}`, {
+    return fetch(`${API_BASE_URL}/api/availableConversations/${conversationId}`, {
         method : 'GET'
     })
     .then(res => normalizeResponseErrors(res))

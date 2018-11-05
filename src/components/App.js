@@ -55,12 +55,10 @@ export class App extends React.Component {
   }
 
   onLogoutClick() {
-    console.log(`ran onLogoutClick()`);
     this.props.dispatch(logout());
   }
 
   render() {
-    console.log(`Hello App.js`);
     console.log(`window.location.pathname= `, window.location.pathname);
     let footer;
     let header;

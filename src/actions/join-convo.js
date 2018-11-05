@@ -45,7 +45,7 @@ export const resetComponent = () => ({
 export const getAvailableConversationsList = () => dispatch => {
     // Retrieves the availableConversations with the status = 'available'.
     console.log(`run getAvailableConversationList`);
-    fetch(`${API_BASE_URL}/availableConversations`, {
+    fetch(`${API_BASE_URL}/api/availableConversations`, {
         method : 'GET'
     })
     .then(res => normalizeResponseErrors(res))
@@ -89,7 +89,7 @@ const checkConversationAvailability = (conversationId) => {
     // make a fetch(PUT) request to set the availableConversation's status on server to 'closed', if it's available.  !! this will inform the 2nd member too
     // if that the status was not 'available' when making the request, we receive that notification too.
     return (
-        fetch(`${API_BASE_URL}/availableConversations/${conversationId}`, {
+        fetch(`${API_BASE_URL}/api/availableConversations/${conversationId}`, {
             method : 'PUT',
             headers : {
                 'Content-Type' : 'application/json'

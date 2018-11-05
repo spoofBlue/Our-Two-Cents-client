@@ -91,12 +91,14 @@ export const postMessage = (username, message) => {
 
 export const leaveSendBirdChannel = () => {
     console.log(`sendbird. leaveSendBirdChannel.`);
-    GROUP_CHANNEL.leave(function(response, error) {
-        console.log(`sendbird. leaveSendBirdChannel. response=`, response);
-        if (error) {
-            return;
-        }
-    });
+    if (GROUP_CHANNEL) {
+        GROUP_CHANNEL.leave(function(response, error) {
+            console.log(`sendbird. leaveSendBirdChannel. response=`, response);
+            if (error) {
+                return;
+            }
+        });
+    }
 }
 
 export const exitSendBird = () => {
