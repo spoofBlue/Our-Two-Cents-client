@@ -6,7 +6,8 @@ import {connect} from 'react-redux';
 import PropType from 'prop-types';
 
 // Actions
-import {enterConversation, processSubmittedMessage, exitConversation, resetComponent} from '../actions/conversation';
+import {enterConversation, processSubmittedMessage, renderMessageList, exitConversation, resetComponent} from '../actions/conversation';
+import {getSendBirdChannel, getMessageList, getChannelEventHandler} from '../actions/sendbird';
 
 // Components
 import ConversationForm from './conversation-form';
@@ -23,20 +24,42 @@ export class ConversationSection extends React.Component {
 
     sendMessage(message) {
         console.log(`ran sendMessage. message=`, message);
-        this.props.dispatch(processSubmittedMessage(message, this.props.currentUser));
+        this.props.dispatch(processSubmittedMessage(message));
     }
 
     exitConvo() {
         this.props.dispatch(exitConversation(this.props.conversationData));
     }
 
+    chatElement() {
+        //let groupChannel = getSendBirdChannel(channelURL);
+        const messageLst = getMessageList();
+        console.log(`in chatElemet. props messageList=`, this.props.messageList);
+        console.log(`in chatElemet. channel's messageList=`, messageLst);
+        const getChannelHandler = new Promise(function(resolve, reject) {
+            resolve(getChannelEventHandler());
+        });
+        getChannelHandler
+        .then(handler => {
+            handler.onMessageReceived(function(channel, message) {
+                console.log(`in chatElemet. message=`, message);
+                console.log(`in chatElemet. channel=`, channel);
+                this.props.dispatch(renderMessageList(messageLst, message));
+            })
+        });
+    }
+
     render() {
+        console.log(`conversation-section. this.props=`, this.props);
         if (!this.props.loggedIn) {
             return <Redirect to="/login" />;
         }
-        console.log(`conversation-section. this.props.conversationData=`, this.props.conversationData);
         if (this.props.leaveConversation) {
             return (<Redirect to='/home' />);
+        }
+        let conversationElement;
+        if (this.props.conversationStarted) {
+            conversationElement = this.chatElement();
         }
         return (
             <section className="conversation-section">
@@ -71,6 +94,7 @@ const mapStateToProps = state => {
         loggedIn: state.auth.currentUser !== null,
         conversationData : {
             conversationId : state.convo.conversationData.conversationId,
+            channelURL : state.convo.conversationData.channelURL,
             otherPersonUserId : state.convo.conversationData.otherPersonUserId,
             otherPersonUsername : state.convo.conversationData.otherPersonUsername,
             topicId : state.convo.conversationData.topicId,

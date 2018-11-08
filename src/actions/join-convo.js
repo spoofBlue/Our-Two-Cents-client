@@ -134,10 +134,13 @@ const combineConversationData = (res, userId, username) => ({
 
 const startConversation = (conversationData) => dispatch => {
     let establishChannelCreation = new Promise(function(resolve, reject) {
-        resolve(createSendBirdChannel(conversationData));
+        let groupChannel = createSendBirdChannel(conversationData)
+        resolve(groupChannel);
+        // !!! expecting something like sendbird_group_channel_82716964_9be546b931d38f17153242db77c2456460de341b
     });
 
     return establishChannelCreation
+    .then(groupChannel => postConversationDataToServer(conversationData, groupChannel))
     .then(() => setSendBirdChannelPreference())
     .then(() => inviteToSendBirdChannel(conversationData))
     .then(() => {
@@ -149,6 +152,38 @@ const startConversation = (conversationData) => dispatch => {
         dispatch(displayError(err));
     });
 };
+
+const postConversationDataToServer = (conversationData, groupChannel) => {
+    // Sends the other participating user the channelURL of the group channel they are connecting through. 
+    // We store this link in the conversation POST.
+    console.log(`groupChannel.url=`, groupChannel.url);
+    return fetch(`${API_BASE_URL}/api/conversations/`, {
+        method : 'POST',
+        headers : {
+            'Content-Type' : 'application/json'
+        },
+        body : JSON.stringify({
+            conversationId : conversationData.conversationId,
+            channelURL : groupChannel.url,
+            hostUserId : conversationData.hostUserId,
+            hostUsername : conversationData.hostUsername,
+            guestUserId : conversationData.guestUserId,
+            guestUsername : conversationData.guestUsername,
+            topicId : conversationData.topicId,
+            topicName : conversationData.topicName
+        })
+    })
+    .then(res => normalizeResponseErrors(res))
+    .then(res => res.json())
+    .then(res => {
+        console.log(`postConversationDataToServer. res=`, res);
+        return res;
+    })
+    .catch(err => {
+        console.log(`postConversationDataToServer. err=`, err);
+        return err;
+    });
+}
 
 /*
     conversationId : conversationData.conversationId,

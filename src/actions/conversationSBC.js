@@ -2,7 +2,8 @@
 import {API_BASE_URL} from '../config';
 import {normalizeResponseErrors} from './utils';
 import {acceptInviteToSendBirdChannel, leaveSendBirdChannel, getSendBirdChannel, createChannelEventHandler, 
-    postMessageToChannel, getMessageList, removeChannelHandler, messageRecievedEvent} from './sendbird'
+    postMessageToChannel, getMessageList, removeChannelHandler, messageRecievedEvent} from './sendbird';
+import SendBird from './sendbirdComponent';
 
 import { displayError } from "./join-convo";
 

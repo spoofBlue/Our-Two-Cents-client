@@ -27,7 +27,7 @@ export class App extends React.Component {
   componentDidUpdate(prevProps) {
     if (!prevProps.loggedIn && this.props.loggedIn) {
       // When we are logged in, refresh the auth token periodically
-      accessSendBird(this.props.currentUser.userId);
+      accessSendBird(this.props.currentUser.userId, this.props.currentUser.username);
       this.startPeriodicRefresh();
     } else if (prevProps.loggedIn && !this.props.loggedIn) {
       // Stop refreshing when we log out
