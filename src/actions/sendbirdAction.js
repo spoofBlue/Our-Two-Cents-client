@@ -104,24 +104,6 @@ class SendBirdAction {
         return new Promise((resolve, reject) => {
             console.log(`ran createChannelEventHandler`);
             const handler = new this.SENDBIRD.ChannelHandler();
-            handler.onMessageReceived = (channel, message) => {
-                console.log(`sendbird. in createChannel's onMessageReceived. channel=`, channel);
-                console.log(`sendbird. in createChannel's onMessageReceived. message=`, message);
-                /*if (this.onMessageReceived) {
-                this.onMessageReceived(channel, message);
-                    console.log(`entered onMessageReceived in createChannelEventhandler. channel=`, channel);
-                    console.log(`entered onMessageReceived in createChannelEventhandler. message=`, message);
-                }*/
-                return message;
-            };
-            handler.onMessageUpdated = (channel, message) => {
-                console.log(`sendbird. in createChannel's onMessageUpdated. channel=`, channel);
-                console.log(`sendbird. in createChannel's onMessageUpdated. message=`, message);
-                /*if (this.onMessageUpdated) {
-                this.onMessageUpdated(channel, message);
-                }*/
-                return message;
-            };
             this.SENDBIRD.addChannelHandler(channelId, handler);
             resolve(handler);
         });
@@ -132,12 +114,10 @@ class SendBirdAction {
     }
 
     postMessageToChannel = (message, channelURL) => {
-        // !!! Currently not using username.
         console.log(`sendbird. postMessage. message=`, message);
         return new Promise((resolve, reject) => {
             this.SENDBIRD.GroupChannel.getChannel(channelURL, (groupChannel, error) => {
                 groupChannel.sendUserMessage(message.message, function(message, error) {
-                    //handler(message, error)
                     console.log(`sendbird. postMessage after sendUserMessage. message=`, message);
                     console.log(`sendbird. postMessage after sendUserMessage. error=`, error);
                     error ? reject(error) : resolve(message);
@@ -168,14 +148,6 @@ class SendBirdAction {
                 resolve([]);
                 }
             });
-        });
-    }
-
-    messageRecievedEvent = () => {
-        this.CHANNEL_HANDLER.onMessageReceived(function(channel, message) { 
-            console.log(`sendbird. messageReceivedEvent. channel=`, channel);
-            console.log(`sendbird. messageReceivedEvent. channel=`, message);
-            //return message;
         });
     }
 

@@ -34,7 +34,7 @@ export class ConversationSection extends React.Component {
 
     chatElement() {
         //let groupChannel = getSendBirdChannel(channelURL);
-        this.props.dispatch(handleChannelEvent(this.props.conversationData.channelURL, this.props.conversationData.conversatonId, this.props.currentUser.userId));
+        this.props.dispatch(handleChannelEvent(this.props.conversationData));
     }
 
     render() {
