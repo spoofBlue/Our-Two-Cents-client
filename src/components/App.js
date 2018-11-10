@@ -3,8 +3,8 @@ import React from 'react';
 import {withRouter, Route, Redirect, Switch} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {refreshAuthToken, logout} from '../actions/auth';
-import {initializeSendBird, accessSendBird} from '../actions/sendbird';
 
+import SendBirdAction from '../actions/sendbirdAction';
 import LandingPageSection from './landing-page-section';
 import LoginSection from './login-section';
 import CreateAccountSection from './create-account-section';
@@ -16,21 +16,25 @@ import Footer from "./footer";
 
 import './index.css';
 
+export let sendbirdInstance;
+
 export class App extends React.Component {
   componentDidMount() {
-    initializeSendBird();
+    sendbirdInstance = SendBirdAction.getInstance();
     if (this.props.loggedIn) {
-      accessSendBird(this.props.currentUser.userId);
+      sendbirdInstance.accessSendBird(this.props.currentUser.userId);
     }
+
   }
 
   componentDidUpdate(prevProps) {
     if (!prevProps.loggedIn && this.props.loggedIn) {
       // When we are logged in, refresh the auth token periodically
-      accessSendBird(this.props.currentUser.userId, this.props.currentUser.username);
+      sendbirdInstance.accessSendBird(this.props.currentUser.userId, this.props.currentUser.username);
       this.startPeriodicRefresh();
     } else if (prevProps.loggedIn && !this.props.loggedIn) {
       // Stop refreshing when we log out
+      sendbirdInstance.exitSendBird();
       this.stopPeriodicRefresh();
     }
   }

@@ -3,6 +3,9 @@ import {API_BASE_URL} from '../config';
 import {normalizeResponseErrors} from './utils';
 import {createSendBirdChannel, setSendBirdChannelPreference, inviteToSendBirdChannel } from './sendbird';
 
+//import {sendbirdInstance} from '../components/App';
+import SendBirdAction from './sendbirdAction';
+
 /* A topic has these properties before user interacts with it.
     conversationId : this._id,
     hostUserId : this.hostUserId,
@@ -133,16 +136,24 @@ const combineConversationData = (res, userId, username) => ({
 });
 
 const startConversation = (conversationData) => dispatch => {
+    const sendbirdInstance = SendBirdAction.getInstance();
+    let channelURL;
+    console.log(`startConversation. sendbirdInstance=`, sendbirdInstance);
     let establishChannelCreation = new Promise(function(resolve, reject) {
-        let groupChannel = createSendBirdChannel(conversationData)
-        resolve(groupChannel);
+        sendbirdInstance.createSendBirdChannel(conversationData)
+        .then(groupChannel => {
+            channelURL = groupChannel.url;
+            console.log(channelURL);
+            resolve();
+        })
+        .catch(err => dispatch(displayError(err)));
         // !!! expecting something like sendbird_group_channel_82716964_9be546b931d38f17153242db77c2456460de341b
     });
 
     return establishChannelCreation
-    .then(groupChannel => postConversationDataToServer(conversationData, groupChannel))
-    .then(() => setSendBirdChannelPreference())
-    .then(() => inviteToSendBirdChannel(conversationData))
+    .then(() => postConversationDataToServer(conversationData, channelURL))
+    .then(() => sendbirdInstance.setSendBirdChannelPreference())
+    .then(() => sendbirdInstance.inviteToSendBirdChannel(conversationData, channelURL))
     .then(() => {
         console.log(`in startConversation. create, invite channel complete.`);
         dispatch(moveToConversation(conversationData.conversationId));
@@ -153,10 +164,10 @@ const startConversation = (conversationData) => dispatch => {
     });
 };
 
-const postConversationDataToServer = (conversationData, groupChannel) => {
+const postConversationDataToServer = (conversationData, channelURL) => {
     // Sends the other participating user the channelURL of the group channel they are connecting through. 
     // We store this link in the conversation POST.
-    console.log(`groupChannel.url=`, groupChannel.url);
+    console.log(`postConversationDataToSErver. channelURL=`, channelURL);
     return fetch(`${API_BASE_URL}/api/conversations/`, {
         method : 'POST',
         headers : {
@@ -164,7 +175,7 @@ const postConversationDataToServer = (conversationData, groupChannel) => {
         },
         body : JSON.stringify({
             conversationId : conversationData.conversationId,
-            channelURL : groupChannel.url,
+            channelURL : channelURL,
             hostUserId : conversationData.hostUserId,
             hostUsername : conversationData.hostUsername,
             guestUserId : conversationData.guestUserId,
@@ -184,13 +195,3 @@ const postConversationDataToServer = (conversationData, groupChannel) => {
         return err;
     });
 }
-
-/*
-    conversationId : conversationData.conversationId,
-    hostUserId : conversationData.hostUserId,
-    hostUsername : conversationData.hostUsername,
-    guestUserId : conversationData.guestUserId,
-    guestUsername : conversationData.guestUsername,
-    topicId : conversationData.topicId,
-    topicName : conversationData.topicName
-*/

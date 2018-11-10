@@ -2,9 +2,9 @@
 import {API_BASE_URL} from '../config';
 import {normalizeResponseErrors} from './utils';
 import {acceptInviteToSendBirdChannel, leaveSendBirdChannel, getSendBirdChannel, createChannelEventHandler, 
-    postMessageToChannel, getMessageList, removeChannelHandler, messageRecievedEvent} from './sendbird'
-
-import { displayError } from "./join-convo";
+    postMessageToChannel, getMessageList, removeChannelHandler, messageRecievedEvent} from './sendbird';
+//import {sendbirdInstance} from '../components/App';
+import SendBirdAction from './sendbirdAction';
 
 // Functions
 export const DISPLAY_MESSAGE_LIST = 'DISPLAY_MESSAGE_LIST';
@@ -39,7 +39,14 @@ export const resetComponent = () => ({
     type : RESET_COMPONENT
 });
 
+export const DISPLAY_ERROR = `DISPLAY_ERROR`;
+export const displayError = status => ({
+    type : DISPLAY_ERROR,
+    error : status.error
+});
+
 export const enterConversation = (conversationId, userId, username) => dispatch => {
+    const sendbirdInstance = SendBirdAction.getInstance();
     let getConversation = new Promise(function(resolve, reject) {
         resolve(getConversationDataFromServer(conversationId));
     });
@@ -49,15 +56,10 @@ export const enterConversation = (conversationId, userId, username) => dispatch 
     .then(res => {
         conversationData = interpretConversationData(res, userId);
         console.log(`enterConversation. getConversation's conversationData=`, conversationData);
-        return getSendBirdChannel(conversationData.channelURL);
+        return sendbirdInstance.getSendBirdChannel(conversationData.channelURL);
     })
     .then(groupChannel => {
         console.log(`enterConversation. groupChannel=`, groupChannel);
-        let channelId = `${conversationId}-${userId}`
-        return createChannelEventHandler(channelId);
-    })
-    .then(handler => {
-        console.log(`enterConversation. handler=`, handler);
         dispatch(updateConversationData(conversationData));
         dispatch(displayConversationStarted());
     })
@@ -103,11 +105,12 @@ const interpretConversationData = (data, userId) => {
 
 export const exitConversation = (conversationData) => dispatch => {
     // Leaves the conversation, but first sends a POST request notifying the server and other user they're leaving.
+    const sendbirdInstance = SendBirdAction.getInstance();
     let closeEventHandler = new Promise(function(resolve, reject) {
-        resolve(removeChannelHandler(conversationData.channelURL));
+        resolve(sendbirdInstance.removeChannelHandler(conversationData.channelURL));
     });
     closeEventHandler
-    .then(() => leaveSendBirdChannel())
+    .then(() => sendbirdInstance.leaveSendBirdChannel())
     .then(() => {
         dispatch(displayConversationFinished());
         dispatch(displayConversationLeaving());
@@ -119,16 +122,36 @@ export const exitConversation = (conversationData) => dispatch => {
 }
 
 // Messaging
-export const processSubmittedMessage = (message) => dispatch => {  // I won't need to bring in messageList when I can retrieve it from the server.
+export const handleChannelEvent = (channelURL, conversationId, userId) => dispatch => {
+    console.log(`ran handleChannelEvent. channelURL=`, channelURL);
+    const sendbirdInstance = SendBirdAction.getInstance();
+    const messageList = sendbirdInstance.getMessageList(channelURL);
+    console.log(`in chatElemet. channel's messageList=`, messageList);
+    const createEventHandler = new Promise(function(resolve, reject) {
+        let channelId = `${conversationId}-${userId}`
+        resolve(sendbirdInstance.createChannelEventHandler(channelId));
+    });
+    createEventHandler
+    .then(handler => {
+        handler.onMessageReceived(function(channel, message) {
+            console.log(`in chatElemet. message=`, message);
+            console.log(`in chatElemet. channel=`, channel);
+            dispatch(renderMessageList(messageList, message));
+        })
+    });
+}
+
+export const processSubmittedMessage = (message, conversationData) => dispatch => {  // I won't need to bring in messageList when I can retrieve it from the server.
     // function above retrieves messageList
+    const sendbirdInstance = SendBirdAction.getInstance();
     const posting = new Promise(function(resolve, reject) {
-        resolve(postMessageToChannel(message));
+        resolve(sendbirdInstance.postMessageToChannel(message, conversationData.channelURL));
     });
 
     return posting
     .then(() => {
         console.log(`in processSubmittedMessage after postMessageToChannel.`);
-        return getMessageList();
+        return sendbirdInstance.getMessageList(conversationData.channelURL);
     })
     .then(messageList => {
         dispatch(displayMessageList(messageList));

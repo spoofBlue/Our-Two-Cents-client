@@ -5,7 +5,6 @@ import {SubmissionError} from 'redux-form';
 import {API_BASE_URL} from '../config';
 import {normalizeResponseErrors} from './utils';
 import {saveAuthToken, clearAuthToken} from '../local-storage';
-import {exitSendBird} from './sendbird';
 
 export const SET_AUTH_TOKEN = 'SET_AUTH_TOKEN';
 export const setAuthToken = authToken => ({
@@ -102,7 +101,6 @@ export const refreshAuthToken = () => (dispatch, getState) => {
 };
 
 export const logout = () => (dispatch, getState) => {
-    exitSendBird();
     const authToken = getState().auth.authToken;
     dispatch(clearAuth());
     clearAuthToken(authToken);

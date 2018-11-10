@@ -6,8 +6,9 @@ import {connect} from 'react-redux';
 import PropType from 'prop-types';
 
 // Actions
-import {enterConversation, processSubmittedMessage, renderMessageList, exitConversation, resetComponent} from '../actions/conversation';
+import {enterConversation, processSubmittedMessage, handleChannelEvent, renderMessageList, exitConversation, resetComponent} from '../actions/conversation';
 import {getSendBirdChannel, getMessageList, getChannelEventHandler} from '../actions/sendbird';
+import {sendbirdInstance} from '../components/App';
 
 // Components
 import ConversationForm from './conversation-form';
@@ -24,7 +25,7 @@ export class ConversationSection extends React.Component {
 
     sendMessage(message) {
         console.log(`ran sendMessage. message=`, message);
-        this.props.dispatch(processSubmittedMessage(message));
+        this.props.dispatch(processSubmittedMessage(message, this.props.conversationData));
     }
 
     exitConvo() {
@@ -33,20 +34,7 @@ export class ConversationSection extends React.Component {
 
     chatElement() {
         //let groupChannel = getSendBirdChannel(channelURL);
-        const messageLst = getMessageList();
-        console.log(`in chatElemet. props messageList=`, this.props.messageList);
-        console.log(`in chatElemet. channel's messageList=`, messageLst);
-        const getChannelHandler = new Promise(function(resolve, reject) {
-            resolve(getChannelEventHandler());
-        });
-        getChannelHandler
-        .then(handler => {
-            handler.onMessageReceived(function(channel, message) {
-                console.log(`in chatElemet. message=`, message);
-                console.log(`in chatElemet. channel=`, channel);
-                this.props.dispatch(renderMessageList(messageLst, message));
-            })
-        });
+        this.props.dispatch(handleChannelEvent(this.props.conversationData.channelURL, this.props.conversationData.conversatonId, this.props.currentUser.userId));
     }
 
     render() {
