@@ -47,7 +47,7 @@ export class CreateAccountForm extends React.Component {
                 <p> In joining this site, I agree to engage in civil and respectful discussion with my peers.  Despite our difference in perspectives, I seek to gain a greater understanding of others through our conversations.</p>
                 <Field name="agreement" type="checkbox" id="create-account-agreement" component="input" required />
                 <p>I agree.</p>
-                <button type="submit" disabled={this.props.pristine || this.props.submitting}> >Sign Up</button>
+                <button type="submit" disabled={this.props.pristine || this.props.submitting}>Sign Up</button>
             </form>
         );
     }

@@ -1,24 +1,54 @@
 
-* {
+html {
+    height : 100%;
     margin : 0;
     box-sizing : border-box;
+}
+
+.background {
+    background-color : lightgrey;
+    position : fixed;
+    top : 0;
+    width : 100%;
+    height : 100%;
+    z-index : -1;
+}
+
+body {
+    font-size: 12px;
+    position : relative;
+    min-height: 100%;
 }
 
 main {
     /*min-height : 200px;*/
     padding : 0;
-    background-color : grey;
+}
+
+button {
+    margin-bottom : 5px;
 }
 
 section {
-    padding : 10px;
-    height : 400px;
-    background-color : lightgrey;
-    border-top : black 1px solid;
+    padding : 0px 10px 10px;
+    background-color : transparent;
+}
+
+.page-container {
+    padding-bottom : 7rem;
+}
+
+p {
+    margin : 0px;
 }
 
 a {
     color : blue;
+}
+
+.form-error {
+    display : inline;
+    color : darkred;
 }
 
 .light-grey {
@@ -31,4 +61,21 @@ a {
 
 .dark-grey {
     background-color : rgb(60, 60, 60);
+}
+
+.modal {
+    position : inherit;
+}
+
+.modal-dialog {
+    margin : 0px 0px 10px;
+    width : auto;
+}
+
+.modal-header {
+    padding : 4px 10px;
+}
+
+.modal-body {
+    padding : 8px 12px;
 }

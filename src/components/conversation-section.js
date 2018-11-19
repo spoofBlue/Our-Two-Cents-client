@@ -34,7 +34,8 @@ export class ConversationSection extends React.Component {
 
     chatElement() {
         //let groupChannel = getSendBirdChannel(channelURL);
-        this.props.dispatch(handleChannelEvent(this.props.conversationData));
+        //this.props.dispatch(handleChannelEvent(this.props.conversationData));
+        return this.props.conversationData.handler;
     }
 
     render() {
@@ -64,6 +65,7 @@ ConversationSection.propType = {
     currentUser : PropType.object.isRequired,
     conversationData : {
         conversationId : PropType.string,
+        handler : PropType.string,
         otherPersonId : PropType.string,
         otherPersonUsername : PropType.string,
         topicName : PropType.string,
@@ -83,6 +85,7 @@ const mapStateToProps = state => {
         conversationData : {
             conversationId : state.convo.conversationData.conversationId,
             channelURL : state.convo.conversationData.channelURL,
+            handler : state.convo.conversationData.handler,
             otherPersonUserId : state.convo.conversationData.otherPersonUserId,
             otherPersonUsername : state.convo.conversationData.otherPersonUsername,
             topicId : state.convo.conversationData.topicId,

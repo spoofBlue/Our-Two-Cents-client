@@ -1,7 +1,6 @@
 
 // Libraries
 import React from 'react';
-import {Link} from 'react-router-dom';
 import {reduxForm, Field, focus} from 'redux-form';
 
 // Actions
@@ -13,15 +12,16 @@ import Input from './input';
 // Validators
 import {required, nonEmpty} from '../validators';
 
+// Specific CSS
+import './login-section.css';
+
 export class LoginForm extends React.Component {
     onSubmit(values) {
-        console.log(values);
         return this.props.dispatch(login(values.email, values.password));
     }
 
     render() {
         let error;
-        console.log(`in login-form. this.props.error=`, this.props.error);
         if (this.props.error) {
             error = (<p className="error">{this.props.error}</p>);
         }

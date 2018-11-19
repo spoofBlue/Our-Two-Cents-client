@@ -1,9 +1,7 @@
 
 import {API_BASE_URL} from '../config';
 import {normalizeResponseErrors} from './utils';
-import {acceptInviteToSendBirdChannel, leaveSendBirdChannel, getSendBirdChannel, createChannelEventHandler, 
-    postMessageToChannel, getMessageList, removeChannelHandler, messageRecievedEvent} from './sendbird';
-//import {sendbirdInstance} from '../components/App';
+
 import SendBirdAction from './sendbirdAction';
 
 // Functions
@@ -22,6 +20,12 @@ export const UPDATE_CONVERSATION_DATA = 'UPDATE_CONVERSATION_DATA';
 export const updateConversationData = conversationData => ({
     type : UPDATE_CONVERSATION_DATA,
     conversationData
+});
+
+export const UPDATE_HANDLER = `UPDATE_HANDLER`;
+export const updateHandler = handler => ({
+    type : UPDATE_HANDLER,
+    handler
 });
 
 export const DISPLAY_CONVERSATION_FINISHED = `DISPLAY_CONVERSATION_FINISHED`;
@@ -60,8 +64,35 @@ export const enterConversation = (conversationId, userId, username) => dispatch 
     })
     .then(groupChannel => {
         console.log(`enterConversation. groupChannel=`, groupChannel);
-        dispatch(updateConversationData(conversationData));
-        dispatch(displayConversationStarted());
+        
+        let channelId = `${conversationData.conversationId}-${conversationData.userId}`;
+        return sendbirdInstance.createChannelEventHandler(channelId);
+    })
+    .then(handler => {
+        console.log(`in chatElemet. channel's handler=`, handler);
+        sendbirdInstance.getMessageList(conversationData.channelURL)
+        .then(messageList => {
+            console.log(`in chatElemet. channel's messageList=`, messageList);
+            handler.onMessageReceived = (channel, message) => {
+                console.log(`in chatElemet. channel=`, channel);
+                console.log(`in chatElemet. message=`, message);
+                dispatch(renderMessageList(messageList, message));
+            }
+            /*
+            handler.onMessageUpdated = (channel, message) => {
+                console.log(`in chatElemet. message=`, message);
+                dispatch(renderMessageList(messageList, message));
+            }
+            */
+            handler.onUserLeft = function(groupChannel, user) { 
+                console.log(`A user left.`)
+                dispatch(displayConversationFinished());
+            };
+            conversationData.handler = handler;
+            dispatch(updateConversationData(conversationData));
+            dispatch(displayConversationStarted());
+        })
+        .catch(err => err)
     })
     .catch(err => {
         console.log(`enterConversation. err=`,err);
@@ -122,39 +153,6 @@ export const exitConversation = (conversationData) => dispatch => {
 }
 
 // Messaging
-export const handleChannelEvent = (conversationData) => dispatch => {
-    const sendbirdInstance = SendBirdAction.getInstance();
-
-    const getList = new Promise(function(resolve, reject) {
-        resolve(sendbirdInstance.getMessageList(conversationData.channelURL));
-    });
-    // May also need to create the event when the person enter the convesation, then retrieve the event as part of the render(),
-    // so we're not constantly creating a new channel event handler?
-    const createEventHandler = new Promise(function(resolve, reject) {
-        let channelId = `${conversationData.conversationId}-${conversationData.userId}`
-        resolve(sendbirdInstance.createChannelEventHandler(channelId));
-    });
-    
-    createEventHandler
-    .then(handler => {
-        getList
-        .then(messageList => {
-            console.log(`in chatElemet. channel's messageList=`, messageList);
-            handler.onMessageReceived = (channel, message) => {
-                console.log(`in chatElemet. message=`, message);
-                dispatch(renderMessageList(messageList, message));
-            }
-            handler.onMessageUpdated = (channel, message) => {
-                console.log(`in chatElemet. message=`, message);
-                dispatch(renderMessageList(messageList, message));
-            }
-            handler.onUserLeft = function(groupChannel, user) { 
-                console.log(`A user left.`)
-                dispatch(displayConversationFinished());
-            };
-        })
-    });
-}
 
 export const processSubmittedMessage = (message, conversationData) => dispatch => {  // I won't need to bring in messageList when I can retrieve it 
     // from the server.
@@ -167,11 +165,11 @@ export const processSubmittedMessage = (message, conversationData) => dispatch =
     return posting
     .then(() => {
         console.log(`in processSubmittedMessage after postMessageToChannel.`);
-        //return sendbirdInstance.getMessageList(conversationData.channelURL);
-    //})
-    //.then(messageList => {
-        //console.log(`processSubmittedMessage. messageList=`, messageList);
-        //dispatch(renderMessageList(messageList, message));
+        return sendbirdInstance.getMessageList(conversationData.channelURL);
+    })
+    .then(messageList => {
+        console.log(`processSubmittedMessage. messageList=`, messageList);
+        dispatch(renderMessageList(messageList, message));
     })
     .catch(err => {
         dispatch(displayError(err));

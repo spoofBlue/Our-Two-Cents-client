@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {withRouter, Route, Redirect, Switch} from 'react-router-dom';
+import {withRouter, Route, Redirect, Switch, Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {refreshAuthToken, logout} from '../actions/auth';
 
@@ -68,12 +68,12 @@ export class App extends React.Component {
     let header;
     
     if (!window.location.pathname.startsWith('/conversation')) {
-      header = <Header onClick={() => this.onLogoutClick()}/>;
+      header = <Header onClick={() => this.onLogoutClick()} loggedIn={this.props.loggedIn} />;
       footer = <Footer />;
     }
 
     return (
-      <div className="container">
+      <div className="page-container">
         {header}
         <main role="main">
           <Switch>
@@ -84,9 +84,10 @@ export class App extends React.Component {
             <Route exact path="/home" component={AvailableConversationSection} />
             <Route exact path="/create-conversation" component={CreateConversationSection} />
             <Route exact path="/conversation/:conversationId" component={ConversationSection} />
-            <Route render={function () {return <p>Not Found</p>}} />
+            <Route render={function () {return <p>This route doesn't exist, you can start at the <Link to="./home">home page</Link>.</p>}} />
           </Switch>
         </main>
+        <div className="background"></div>
         {footer}
       </div>
     );

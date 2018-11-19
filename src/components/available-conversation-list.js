@@ -3,6 +3,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router-dom';
+import {Grid, Row} from 'react-bootstrap';
 
 // Actions
 import {prepareConversation, getAvailableConversationsList, resetComponent} from '../actions/join-convo'
@@ -50,13 +51,13 @@ export class AvailableConversationList extends React.Component {
         }
 
         return (
-            <div className="container">
-                {error}
-                {loading}
-                <ul>
-                    {conversationList}
-                </ul>
-            </div>
+            <Grid>
+                <Row className="show-grid">
+                    {error}
+                    {loading}
+                        {conversationList}
+                </Row>
+            </Grid>
         );
     }
 }

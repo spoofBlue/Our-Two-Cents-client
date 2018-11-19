@@ -1,7 +1,8 @@
 
 footer {
     width : 100%;
-    position : fixed;
+    height : 6rem;
+    position: absolute;
     bottom : 0;
-    background-color : rgb(60, 60, 60);
+    background-color : rgb(150, 150, 150);
 }

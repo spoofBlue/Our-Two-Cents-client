@@ -1,0 +1,60 @@
+/*
+.AC-hostUsername-viewpoint-container {
+    position: relative;
+}
+*/
+
+.available-conversation {
+    padding-bottom : 1rem;
+}
+
+.AC-topic-container {
+    padding-bottom: 5px;
+    padding-left: 20%;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.AC-hostUsername-viewpoint-container {
+    height : 40px;
+}
+
+.AC-hostViewpoint-short, .AC-topic {
+    overflow: hidden;
+}
+
+.AC-hostUsername, .AC-hostViewpoint-short {
+    display: inline-block;
+}
+
+.AC-hostViewpoint-short {
+    width : 70%;
+    height : 30px;
+}
+
+.AC-hostUsername {
+    position: relative;
+    transform: translateY(-50%);
+    /*
+    top: 50%;
+    */
+    border: 1px solid black;
+    border-radius: 50%;
+    vertical-align: middle;
+    min-width: 40px;
+    min-height: 40px;
+    padding: 10px 15px;
+}
+
+.AC-hostViewpoint-expand-icon {
+    width : 10%;
+}
+
+.AC-button-container {
+    padding-bottom: 5px;
+    padding-left: 20%;
+}
+
+.AC-start-conversation-button {
+    padding : 4px 8px;
+}   

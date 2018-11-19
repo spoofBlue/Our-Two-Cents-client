@@ -1,6 +1,6 @@
 
 // Actions
-import {DISPLAY_CONVERSATION_STARTED, DISPLAY_MESSAGE_LIST, UPDATE_CONVERSATION_DATA, DISPLAY_CONVERSATION_FINISHED, 
+import {DISPLAY_CONVERSATION_STARTED, DISPLAY_MESSAGE_LIST, UPDATE_CONVERSATION_DATA, UPDATE_HANDLER, DISPLAY_CONVERSATION_FINISHED, 
     DISPLAY_CONVERSATION_LEAVING, RESET_COMPONENT} from '../actions/conversation';
 
 // Reducer
@@ -8,6 +8,8 @@ import {DISPLAY_CONVERSATION_STARTED, DISPLAY_MESSAGE_LIST, UPDATE_CONVERSATION_
 const initialState = {
     conversationData : {
         conversationId : "",
+        channelURL : "",
+        handler : null,
         otherPersonId : "",
         otherPersonUsername : "",
         topicName : "",
@@ -35,6 +37,12 @@ export default function conversationReducer(state=initialState, action) {
     } else if (action.type === UPDATE_CONVERSATION_DATA) {
         return Object.assign({}, state, {
             conversationData : action.conversationData,
+            loading : false,
+            error : false
+        });
+    } else if (action.type === UPDATE_HANDLER) {
+        return Object.assign({}, state, {
+            conversationData : action.handler,
             loading : false,
             error : false
         });

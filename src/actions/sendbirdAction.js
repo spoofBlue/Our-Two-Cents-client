@@ -126,10 +126,6 @@ class SendBirdAction {
         });
     }
 
-    addMessageToList = (messageList, message) => {
-        
-    }
-
     // Add channelURL to relevant callers
     getMessageList = (channelURL) => {
         console.log(`in MessageList. channelURL`, channelURL);
