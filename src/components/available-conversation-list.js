@@ -55,7 +55,7 @@ export class AvailableConversationList extends React.Component {
                 <Row className="show-grid">
                     {error}
                     {loading}
-                        {conversationList}
+                    {conversationList}
                 </Row>
             </Grid>
         );

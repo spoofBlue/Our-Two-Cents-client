@@ -5,56 +5,73 @@
 */
 
 .available-conversation {
-    padding-bottom : 1rem;
+    padding-bottom : 2rem;
+    display : grid;
+    grid-template-columns: 40px auto;
+    grid-template-rows: auto 60px auto;
+    grid-row-gap: 3px;
 }
 
-.AC-topic-container {
-    padding-bottom: 5px;
-    padding-left: 20%;
+.AC-topic {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+
+    margin-left: 10%;
     font-size: 1.5rem;
     font-weight: bold;
 }
 
-.AC-hostUsername-viewpoint-container {
-    height : 40px;
-}
-
-.AC-hostViewpoint-short, .AC-topic {
-    overflow: hidden;
-}
-
-.AC-hostUsername, .AC-hostViewpoint-short {
-    display: inline-block;
-}
-
-.AC-hostViewpoint-short {
-    width : 70%;
-    height : 30px;
-}
-
 .AC-hostUsername {
-    position: relative;
-    transform: translateY(-50%);
-    /*
-    top: 50%;
-    */
-    border: 1px solid black;
-    border-radius: 50%;
-    vertical-align: middle;
-    min-width: 40px;
-    min-height: 40px;
-    padding: 10px 15px;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+
+    background-color : #66ccff;
+    color : black;
+    font-weight : bold;
 }
 
-.AC-hostViewpoint-expand-icon {
-    width : 10%;
+.AC-hostUsername-viewpoint-container {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
 }
 
 .AC-button-container {
-    padding-bottom: 5px;
-    padding-left: 20%;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 3;
+    grid-row-end: 4;
+}
+
+.AC-hostUsername {
+    border: 1px solid black;
+    margin: 10px 0px;
+    width: 40px;
+    height: 40px;
+    padding: 10px 13px;
+    border-radius: 50%;
+}
+
+.AC-hostViewpoint-short {
+    display: inline-block;
+    overflow: hidden;
+    padding-left : 5%;
+    width : 85%;
+    height : 55px;
+}
+
+.AC-hostViewpoint-expand-icon {
+    display: inline-block;
+    height : 35px;
+    width : 15%;
 }
 
 .AC-start-conversation-button {
     padding : 4px 8px;
-}   
+    margin-left: 10%;
+}

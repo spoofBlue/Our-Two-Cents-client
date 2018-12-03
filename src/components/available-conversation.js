@@ -4,6 +4,8 @@ import React from 'react';
 import Button from 'react-bootstrap/lib/Button';
 import Modal from 'react-bootstrap/lib/Modal';
 import Col from 'react-bootstrap/lib/Col';
+import Popover from 'react-bootstrap/lib/Popover';
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 
 import './available-conversation.css';
 
@@ -25,14 +27,25 @@ export default function AvailableConvesation(props) {
         return `${name.substring(0,1)}${name.substring(name.length -2, name.length - 1)}`;
     }
 
+    const popoverHoverFocus = (
+        <Popover id="popover-trigger-hover-focus" title={`${props.topicName} with ${props.hostUsername}`}>
+          <strong>{props.hostViewpoint}</strong>
+        </Popover>
+    );
+
     return (
         <Col sm={6} md={3}>
             <div className="available-conversation">
-                <div className="AC-topic-container">{props.topicName}</div>
+                <div className="AC-topic">{props.topicName}</div>
+                <div className="AC-hostUsername">{getInitials(props.hostUsername)}</div>
                 <div className="AC-hostUsername-viewpoint-container">
-                    <div className="AC-hostUsername">{getInitials(props.hostUsername)}</div>
-                    <p className="AC-hostViewpoint-short">{props.hostViewpoint}</p>
-                    {/*<input type="image" id="AC-hostViewpoint-expand-icon" src="./images/next.png" alt=""/>*/}
+                    <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverHoverFocus}>
+                        <div>
+                            <p className="AC-hostViewpoint-short">{props.hostViewpoint}</p>
+                            <p className="AC-hostViewpoint-expand-icon">></p>
+                            {/*<img className="AC-hostViewpoint-expand-icon" src="../images/next.png" alt=">" />*/}
+                        </div>
+                    </OverlayTrigger>
                 </div>
                 <div className="AC-button-container">
                     <Button bsStyle="primary" className="AC-start-conversation-button" onClick={onClick}>Start Conversation</Button>
@@ -42,18 +55,8 @@ export default function AvailableConvesation(props) {
     );
 }
 
+
 /*
- <Modal.Dialog>
-    <Modal.Header>
-        <Modal.Title className="available-conversation-topic">{props.topicName}</Modal.Title>
-    </Modal.Header> 
-    <Modal.Body>
-        <p className="available-conversation-viewpoint">{props.hostViewpoint}</p>
-        <Button bsStyle="primary" className="start-conversation-button" onClick={onClick}>Start Conversation</Button>
-    </Modal.Body>
-</Modal.Dialog>
-
-
-
+<button name="button" className="AC-hostViewpoint-expand-icon" value=""><img src="../src/images/next.png" alt=">" /></button>
+<input type="image" className="AC-hostViewpoint-expand-icon" src="../images/next.png" alt=">" />
 */
-
