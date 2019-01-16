@@ -29,9 +29,9 @@ export class LoginForm extends React.Component {
             <form id="login-form" onSubmit={this.props.handleSubmit(values => this.onSubmit(values))}>
                 {error}
                 <label htmlFor="email">E-mail:</label>
-                <Field name="email" type="email" id="login-email" placeholder="BobSmith@email.com" validate={[required, nonEmpty]} component={Input} />
+                <Field name="email" type="email" placeholder="BobSmith@email.com" validate={[required, nonEmpty]} component={Input} />
                 <label htmlFor="password">Password:</label>
-                <Field name="password" type="password" id="login-password" placeholder="minimum 10 characters" validate={[required, nonEmpty]} component={Input} />
+                <Field name="password" type="password" placeholder="minimum 10 characters" validate={[required, nonEmpty]} component={Input} />
                 <button type="submit">Sign In</button>
             </form>
         );

@@ -24,7 +24,6 @@ export class App extends React.Component {
     if (this.props.loggedIn) {
       sendbirdInstance.accessSendBird(this.props.currentUser.userId);
     }
-
   }
 
   componentDidUpdate(prevProps) {
@@ -77,7 +76,7 @@ export class App extends React.Component {
         {header}
         <main role="main">
           <Switch>
-            <Route exact path="/" render={() => <Redirect to="/landing-page" />}/>
+            <Route exact path="/" render={() => <Redirect to="/landing-page" />} />
             <Route exact path="/landing-page" component={LandingPageSection} />
             <Route exact path="/login" component={LoginSection} />
             <Route exact path="/create-account" component={CreateAccountSection} />

@@ -1,4 +1,15 @@
 
+.login-section {
+    max-width : 400px;
+    margin : 0 auto;
+}
+
 .form-input {
     padding-bottom : 10px;
+}
+
+input#email, input#password {
+    text-align: left;
+    width: 100%;
+    padding : 0px 10px;
 }

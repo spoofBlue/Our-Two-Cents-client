@@ -7,6 +7,9 @@ html {
 
 .background {
     background-color : lightgrey;
+    background-image : url('../images/background-two.png');
+    background-size : cover;
+    background-position : center;
     position : fixed;
     top : 0;
     width : 100%;

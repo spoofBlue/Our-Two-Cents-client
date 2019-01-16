@@ -22,16 +22,51 @@ h2 {
 
 .header-home-icon {
     position : absolute;
-    top : 0;
-    left : 0;
+    top : 10px;
+    left : 10px;
+    background-image : url('../images-small/home.png');
+    background-repeat : no-repeat;
+    background-size : cover;
+    width : 50px;
+    height : 50px;
+    
 }
 
 .header-right-icons {
     position : absolute;
-    top : 0;
-    right : 0;
+    top : 10px;
+    right : 10px;
 }
 
 .header-about-our-site-icon, .header-logout-button {
-    display : block;
+    display : inline-block;
+}
+
+.header-about-our-site-icon {
+    background-image : url('../images-small/information-icon.png');
+    background-repeat : no-repeat;
+    background-size : cover;
+    width : 50px;
+    height : 50px;
+    
+}
+
+.header-logout-button {
+    background-image : url('../images-small/logout2.png');
+    background-repeat : no-repeat;
+    background-size : cover;
+    width : 50px;
+    height : 50px;
+}
+
+.header-hamburger-menu {
+    position : absolute;
+    top : 10px;
+    right : 10px;
+
+    background-image : url('../images/menu.png');
+    background-repeat : no-repeat;
+    background-size : cover;
+    width : 30px;
+    height : 30px;
 }

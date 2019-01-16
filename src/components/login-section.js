@@ -16,10 +16,9 @@ export function LoginSection(props) {
         return <Redirect to="/home" />;
     }
     return (
-        <div className="container">
-        <div className="static-modal">
-            <Modal.Dialog>
-                <section className="login-section"> 
+        <section className="login-section"> 
+            <div className="static-modal">
+                <Modal.Dialog>
                     <Modal.Header>
                         <Modal.Title>Sign In to your account.</Modal.Title>
                     </Modal.Header>
@@ -27,10 +26,9 @@ export function LoginSection(props) {
                         <LoginForm />
                         <Link to="./create-account">Or sign up to create your account...</Link>
                     </Modal.Body>
-                </section>
-            </Modal.Dialog>
-        </div>
-        </div>
+                </Modal.Dialog>
+            </div>
+        </section>
     );
 }
 

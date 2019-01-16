@@ -34,7 +34,7 @@ export default function AvailableConvesation(props) {
     );
 
     return (
-        <Col sm={6} md={3}>
+        <Col sm={6} md={4}>
             <div className="available-conversation">
                 <div className="AC-topic">{props.topicName}</div>
                 <div className="AC-hostUsername">{getInitials(props.hostUsername)}</div>
