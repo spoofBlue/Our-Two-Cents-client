@@ -1,0 +1,14 @@
+
+.topic-list {
+    list-style-type: none;
+}
+
+.topic button {
+    min-width : 200px;
+    width : 80%;
+    min-height : 30px;
+    background-color: #337ab7;
+    border : 3px  #2e6da4;
+    color : white;
+    border-radius : 12px;
+}

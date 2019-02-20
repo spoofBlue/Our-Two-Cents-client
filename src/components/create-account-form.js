@@ -37,9 +37,9 @@ export class CreateAccountForm extends React.Component {
             <form id="create-account-form" onSubmit={this.props.handleSubmit(values => this.onSubmit(values))}>
                 {error}
                 <label htmlFor="firstName">First Name:</label>
-                <Field name="firstName" id="create-account-first-name" placeholder="Bob" validate={[required, nonEmpty]} component={Input} />
+                <Field name="firstName" type="text" id="create-account-first-name" placeholder="Bob" validate={[required, nonEmpty]} component={Input} />
                 <label htmlFor="lastName">Last Name:</label>
-                <Field name="lastName" id="create-account-last-name" placeholder="Smith" validate={[required, nonEmpty]} component={Input} />
+                <Field name="lastName" type="text" id="create-account-last-name" placeholder="Smith" validate={[required, nonEmpty]} component={Input} />
                 <label htmlFor="email">E-mail:</label>
                 <Field name="email" type="email" id="create-account-email" placeholder="BobSmith@email.com" validate={[required, nonEmpty, isTrimmed]} component={Input} />
                 <label htmlFor="password">Password:</label>

@@ -52,6 +52,7 @@ a {
 .form-error {
     display : inline;
     color : darkred;
+    /* Consider using float: right for the error, as long as the container isn't page wide. */
 }
 
 .light-grey {
@@ -81,4 +82,9 @@ a {
 
 .modal-body {
     padding : 8px 12px;
+}
+
+input[type="text"], input[type="email"], input[type="password"] {
+    text-align: left;
+    padding : 0px 10px;
 }
