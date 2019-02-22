@@ -49,7 +49,7 @@ export const displayError = status => ({
     error : status.error
 });
 
-export const enterConversation = (conversationId, userId, username) => dispatch => {
+export const enterConversation = (conversationId, userId, messageList) => dispatch => {
     const sendbirdInstance = SendBirdAction.getInstance();
     let getConversation = new Promise(function(resolve, reject) {
         resolve(getConversationDataFromServer(conversationId));
@@ -63,36 +63,26 @@ export const enterConversation = (conversationId, userId, username) => dispatch 
         return sendbirdInstance.getSendBirdChannel(conversationData.channelURL);
     })
     .then(groupChannel => {
-        console.log(`enterConversation. groupChannel=`, groupChannel);
-        
+        console.log(`enterConversation. groupChannel=`, groupChannel);       
         let channelId = `${conversationData.conversationId}-${conversationData.userId}`;
         return sendbirdInstance.createChannelEventHandler(channelId);
     })
     .then(handler => {
         console.log(`in chatElemet. channel's handler=`, handler);
         sendbirdInstance.getMessageList(conversationData.channelURL)
-        .then(messageList => {
-            console.log(`in chatElemet. channel's messageList=`, messageList);
-            handler.onMessageReceived = (channel, message) => {
-                console.log(`in chatElemet. channel=`, channel);
-                console.log(`in chatElemet. message=`, message);
-                dispatch(renderMessageList(messageList, message));
-            }
-            /*
-            handler.onMessageUpdated = (channel, message) => {
-                console.log(`in chatElemet. message=`, message);
-                dispatch(renderMessageList(messageList, message));
-            }
-            */
-            handler.onUserLeft = function(groupChannel, user) { 
-                console.log(`A user left.`)
-                dispatch(displayConversationFinished());
-            };
-            conversationData.handler = handler;
-            dispatch(updateConversationData(conversationData));
-            dispatch(displayConversationStarted());
-        })
-        .catch(err => err)
+        console.log(`in chatElemet. channel's messageList=`, messageList);
+        handler.onMessageReceived = (channel, message) => {
+            console.log(`in chatElemet. channel=`, channel);
+            console.log(`in chatElemet. message=`, message);
+            dispatch(renderMessageList(messageList, message));
+        }
+        handler.onUserLeft = function(groupChannel, user) { 
+            console.log(`A user left.`)
+            dispatch(displayConversationFinished());
+        };
+        conversationData.handler = handler;
+        dispatch(updateConversationData(conversationData));
+        dispatch(displayConversationStarted());
     })
     .catch(err => {
         console.log(`enterConversation. err=`,err);
@@ -154,9 +144,8 @@ export const exitConversation = (conversationData) => dispatch => {
 
 // Messaging
 
-export const processSubmittedMessage = (message, conversationData) => dispatch => {  // I won't need to bring in messageList when I can retrieve it 
+export const processSubmittedMessage = (message, conversationData, messageList) => dispatch => {  // I won't need to bring in messageList when I can retrieve it 
     // from the server.
-    // function above retrieves messageList
     const sendbirdInstance = SendBirdAction.getInstance();
     const posting = new Promise(function(resolve, reject) {
         resolve(sendbirdInstance.postMessageToChannel(message, conversationData.channelURL));
@@ -165,10 +154,11 @@ export const processSubmittedMessage = (message, conversationData) => dispatch =
     return posting
     .then(() => {
         console.log(`in processSubmittedMessage after postMessageToChannel.`);
-        return sendbirdInstance.getMessageList(conversationData.channelURL);
+        return sendbirdInstance.getSendBirdChannel(conversationData.channelURL);
     })
-    .then(messageList => {
-        console.log(`processSubmittedMessage. messageList=`, messageList);
+    .then(groupChannel => {
+        console.log(`processSubmittedMessage. lastMessage=`, groupChannel.lastMessage);
+        let message = groupChannel.lastMessage;
         dispatch(renderMessageList(messageList, message));
     })
     .catch(err => {
@@ -177,6 +167,7 @@ export const processSubmittedMessage = (message, conversationData) => dispatch =
 };
 
 export const renderMessageList = (messageList, message) => dispatch => {
+    console.log('in renderMessageList. message=', message);
     messageList.push(message);
     console.log(`in renderMessageList. newMessageList=`, messageList);
     dispatch(displayMessageList(messageList));

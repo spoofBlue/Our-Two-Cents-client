@@ -16,7 +16,7 @@ import ConversationBoard from './conversation-board';
 
 export class ConversationSection extends React.Component {
     componentDidMount() {
-        this.props.dispatch(enterConversation(this.props.match.params.conversationId, this.props.currentUser.userId, this.props.currentUser.username));
+        this.props.dispatch(enterConversation(this.props.match.params.conversationId, this.props.currentUser.userId, this.props.messageList));
     }
 
     componentWillUnmount() {
@@ -25,7 +25,7 @@ export class ConversationSection extends React.Component {
 
     sendMessage(message) {
         console.log(`ran sendMessage. message=`, message);
-        this.props.dispatch(processSubmittedMessage(message, this.props.conversationData));
+        this.props.dispatch(processSubmittedMessage(message, this.props.conversationData, this.props.messageList));
     }
 
     exitConvo() {
