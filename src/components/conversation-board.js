@@ -5,12 +5,11 @@ import Message from './message';
 
 export default function ConversationBoard(props) {
     const board = props.messageList.map((message, index) => {
-        console.log(`conversationBoard. message`,message);
-        console.log(`conversationBoard. message._sender=`,message._sender);
-        console.log(`conversationBoard. message.sender=`,message.sender);
-        
+        //console.log(`conversationBoard. message`, message);
+        //console.log(`conversationBoard. message._sender=`, message._sender);
+
         props.currentUser.userId === message.sender.userId ? message.myMessage = true : message.myMessage = false;
-        return(<Message message={message} key={index} />);
+        return (<Message message={message} key={index} />);
     });
     let conversationStartedText;
     let conversationFinishedText;
