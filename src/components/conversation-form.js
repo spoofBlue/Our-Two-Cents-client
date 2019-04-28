@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {reduxForm, Field, reset, change} from 'redux-form';
+import { reduxForm, Field, reset, change } from 'redux-form';
 import Input from './input';
 
 export class ConversationForm extends React.Component {
@@ -11,15 +11,15 @@ export class ConversationForm extends React.Component {
 
     render() {
         return (
-            <form className="conversation-form" onSubmit={this.props.handleSubmit(value=>this.onSubmit(value))}>
+            <form className="conversation-form" onSubmit={this.props.handleSubmit(value => this.onSubmit(value))}>
                 <label htmlFor="message">Start your conversation here! Remember our guidelines on keeping conversations civil and informative :)</label>
                 <Field name="message" type="textarea" placeholder="Message..." component={Input} />
-                <button type="submit" className="submit-message-button">Send</button>
+                <button type="submit" disabled={this.props.conversationFinished} className="submit-message-button">Send</button>
             </form>
         );
     }
 }
 
 export default reduxForm({
-    form : 'messagenger'
+    form: 'messagenger'
 })(ConversationForm);

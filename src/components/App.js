@@ -1,8 +1,8 @@
 
 import React from 'react';
-import {withRouter, Route, Redirect, Switch, Link} from 'react-router-dom';
-import {connect} from 'react-redux';
-import {refreshAuthToken, logout} from '../actions/auth';
+import { withRouter, Route, Redirect, Switch, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { refreshAuthToken, logout } from '../actions/auth';
 
 import SendBirdAction from '../actions/sendbirdAction';
 import LandingPageSection from './landing-page-section';
@@ -44,14 +44,14 @@ export class App extends React.Component {
 
   startPeriodicRefresh() {
     this.refreshInterval = setInterval(
-        () => this.props.dispatch(refreshAuthToken()),
-        24 * 60 * 60 * 1000 // Can go 24 hours without refreshing.
+      () => this.props.dispatch(refreshAuthToken()),
+      24 * 60 * 60 * 1000 // Can go 24 hours without refreshing.
     );
   }
 
   stopPeriodicRefresh() {
     if (!this.refreshInterval) {
-        return;
+      return;
     }
 
     clearInterval(this.refreshInterval);
@@ -61,20 +61,43 @@ export class App extends React.Component {
     this.props.dispatch(logout());
   }
 
+  /*
+  makeElementsPageHeight() {
+    let elementsToFillPage = document.getElementsByClassName("notSizeIsPageHeight");
+    console.log(`elementsToFillPage= `, elementsToFillPage);
+    for (let i = 0; i < elementsToFillPage.length; i++) {
+      elementsToFillPage[i].classList.remove("notSizeIsPageHeight");
+      elementsToFillPage[i].classList.add("sizeIsPageHeight");
+    }
+  }
+
+  makeElementsNotPageHeight() {
+    let elementsToFillPage = document.getElementsByClassName("sizeIsPageHeight");
+    console.log(`elementsToFillPage= `, elementsToFillPage);
+    for (let i = 0; i < elementsToFillPage.length; i++) {
+      elementsToFillPage[i].classList.remove("sizeIsPageHeight");
+      elementsToFillPage[i].classList.add("notSizeIsPageHeight");
+    }
+  }
+  */
+
   render() {
     console.log(`window.location.pathname= `, window.location.pathname);
     let footer;
     let header;
-    
+
     if (!window.location.pathname.startsWith('/conversation')) {
+      //this.makeElementsNotPageHeight();
       header = <Header onClick={() => this.onLogoutClick()} loggedIn={this.props.loggedIn} />;
       footer = <Footer />;
+    } else {
+      //this.makeElementsPageHeight();
     }
 
     return (
-      <div className="page-container">
+      <div className="page-container notSizeIsPageHeight">
         {header}
-        <main role="main">
+        <main role="main" className="notSizeIsPageHeight">
           <Switch>
             <Route exact path="/" render={() => <Redirect to="/landing-page" />} />
             <Route exact path="/landing-page" component={LandingPageSection} />
@@ -83,7 +106,7 @@ export class App extends React.Component {
             <Route exact path="/home" component={AvailableConversationSection} />
             <Route exact path="/create-conversation" component={CreateConversationSection} />
             <Route exact path="/conversation/:conversationId" component={ConversationSection} />
-            <Route render={function () {return <p>This route doesn't exist, you can start at the <Link to="./home">home page</Link>.</p>}} />
+            <Route render={function () { return <p>This route doesn't exist, you can start at the <Link to="/home">home page</Link>.</p> }} />
           </Switch>
         </main>
         <div className="background"></div>

@@ -33,9 +33,9 @@ export const displayConversationFinished = () => ({
     type: DISPLAY_CONVERSATION_FINISHED
 });
 
-export const DISPLAY_CONVERSATION_LEAVING = `DISPLAY_CONVERSATION_LEAVING`;
-export const displayConversationLeaving = () => ({
-    type: DISPLAY_CONVERSATION_LEAVING
+export const LEAVE_CONVERSATION = `LEAVE_CONVERSATION`;
+export const leaveConversation = () => ({
+    type: LEAVE_CONVERSATION
 });
 
 export const RESET_COMPONENT = `RESET_COMPONENT`;
@@ -49,7 +49,9 @@ export const displayError = status => ({
     error: status.error
 });
 
-export const enterConversation = (conversationId, userId, messageList) => dispatch => {
+export const enterConversation = (conversationId, userId) => dispatch => {
+    // Enters the user into a 1 on 1 conversation, using the conversationId previously assigned by SendBird.
+    // Must create a channel, get the handler (event listener) for the channel, retrieve the messageList
     const sendbirdInstance = SendBirdAction.getInstance();
     let getConversation = new Promise(function (resolve, reject) {
         // !!!! If I also insert the userId here. I could check to see if this user is suppose to be in this conversation,
@@ -73,7 +75,9 @@ export const enterConversation = (conversationId, userId, messageList) => dispat
         .then(eventHandler => {
             handler = eventHandler;
             console.log(`in chatElemet. channel's handler=`, handler);
-            sendbirdInstance.getMessageList(conversationData.channelURL);
+            return sendbirdInstance.getMessageList(conversationData.channelURL);
+        })
+        .then(messageList => {
             console.log(`in chatElemet. channel's messageList=`, messageList);
             handler.onMessageReceived = (channel, message) => {
                 console.log(`in chatElemet. channel=`, channel);
@@ -84,6 +88,7 @@ export const enterConversation = (conversationId, userId, messageList) => dispat
                 console.log(`${user} left.`);
                 dispatch(displayConversationFinished());
             };
+
             conversationData.handler = handler;
             dispatch(updateConversationData(conversationData));
             dispatch(displayConversationStarted());
@@ -131,17 +136,18 @@ export const exitConversation = (conversationData) => dispatch => {
     // Leaves the conversation, but first sends a POST request notifying the server and other user they're leaving.
     const sendbirdInstance = SendBirdAction.getInstance();
     let closeEventHandler = new Promise(function (resolve, reject) {
-        resolve(sendbirdInstance.removeChannelHandler(conversationData.channelURL));
+        resolve(sendbirdInstance.leaveSendBirdChannel(conversationData.channelURL));
     });
     closeEventHandler
-        .then(() => sendbirdInstance.leaveSendBirdChannel())
+        .then(() => sendbirdInstance.removeChannelHandler(conversationData.channelURL))
         .then(() => {
+            console.log("exit conversation.");
             dispatch(displayConversationFinished());
-            dispatch(displayConversationLeaving());
+            dispatch(leaveConversation());
         })
         .catch(() => {
             dispatch(displayConversationFinished());
-            dispatch(displayConversationLeaving());
+            dispatch(leaveConversation());
         });
 }
 

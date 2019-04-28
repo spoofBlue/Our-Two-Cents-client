@@ -1,14 +1,14 @@
 
 // Libraries
 import React from 'react';
-import {reduxForm, Field} from 'redux-form';
+import { reduxForm, Field } from 'redux-form';
 
 export class CreateConversationForm extends React.Component {
     render() {
         return (
             <form className="create-conversation-form" onSubmit={this.props.handleSubmit(value => this.props.onViewpointSubmit(value))}>
                 <label htmlFor="viewpoint">What is your stance on the topic?</label>
-                <Field name="viewpoint" type="text" id="input-user-viewpoint" component="input" required />
+                <Field name="viewpoint" type="textarea" wrap="hard" cols="200" id="input-user-viewpoint" component="input" required />
                 <button type="submit">Open Conversation</button>
             </form>
         );
@@ -16,5 +16,5 @@ export class CreateConversationForm extends React.Component {
 }
 
 export default reduxForm({
-    form : "viewpoint"
+    form: "viewpoint"
 })(CreateConversationForm);

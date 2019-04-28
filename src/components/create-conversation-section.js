@@ -1,13 +1,16 @@
 
 // Libraries
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {Redirect} from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
+import './create-conversation-section.css';
 
 // Actions
-import {processTopicChosen, cancelViewpointSection, processViewpointChosen, cancelWaitingSection, 
-    cancelAvailableConversation, checkAvailableConversationStatus, cancelConversationResetComponent, resetComponent} from '../actions/create-convo';
+import {
+    processTopicChosen, cancelViewpointSection, processViewpointChosen, cancelWaitingSection,
+    cancelAvailableConversation, checkAvailableConversationStatus, cancelConversationResetComponent, resetComponent
+} from '../actions/create-convo';
 
 // Components
 import ChooseTopicSection from './choose-topic-section';
@@ -36,9 +39,9 @@ export class CreateConversationSection extends React.Component {
         this.stopPeriodicCheck();
         if (this.props.conversationCreated) {
             cancelAvailableConversation(this.props.createConvoData)
-            .then(() => {
-                this.props.dispatch(processTopicChosen(topicChosenData));
-            });
+                .then(() => {
+                    this.props.dispatch(processTopicChosen(topicChosenData));
+                });
         } else {
             this.props.dispatch(processTopicChosen(topicChosenData));
         }
@@ -49,10 +52,12 @@ export class CreateConversationSection extends React.Component {
     }
 
     onViewpointSubmit(viewpointData) {
-        const newCreateConvoData = {...this.props.createConvoData, hostViewpoint : viewpointData.viewpoint, 
-            hostUserId : this.props.currentUser.userId, hostUsername : this.props.currentUser.username};
+        const newCreateConvoData = {
+            ...this.props.createConvoData, hostViewpoint: viewpointData.viewpoint,
+            hostUserId: this.props.currentUser.userId, hostUsername: this.props.currentUser.username
+        };
         this.props.dispatch(processViewpointChosen(newCreateConvoData))
-        .then(() => this.startPeriodicCheck());
+            .then(() => this.startPeriodicCheck());
     }
 
     onCancelWaitingSection() {
@@ -85,13 +90,13 @@ export class CreateConversationSection extends React.Component {
         let chooseViewpointSec;
         let waitingSec;
         if (this.props.topicChosenOnly) {
-            chooseViewpointSec = <ChooseViewpointSection createConvoData={this.props.createConvoData} 
-                onViewpointSubmit={viewpointChosenData => this.onViewpointSubmit(viewpointChosenData)} 
+            chooseViewpointSec = <ChooseViewpointSection createConvoData={this.props.createConvoData}
+                onViewpointSubmit={viewpointChosenData => this.onViewpointSubmit(viewpointChosenData)}
                 onCancelViewpointSection={() => this.onCancelViewpointSection()} />;
         } else if (this.props.conversationCreated) {
             waitingSec = <WaitingSection createConvoData={this.props.createConvoData} onCancelWaitingSection={() => this.onCancelWaitingSection()} />;
         }
-        
+
         return (
             <div className="container">
                 <ChooseTopicSection topicList={this.props.topicList} onClickTopic={topicData => this.onClickTopic(topicData)} />
@@ -103,29 +108,29 @@ export class CreateConversationSection extends React.Component {
 }
 
 CreateConversationSection.propTypes = {
-    topicList : PropTypes.array,
-    createConvoData : PropTypes.object,  // topicId, topicName, hostUserId, hostUsername, hostViewpoint
-    topicChosenOnly : PropTypes.bool,
-    conversationCreated : PropTypes.bool,
-    conversationStarted : PropTypes.bool,
-    conversationRoute : PropTypes.string,
-    loading : PropTypes.bool,
-    error : PropTypes.object,
+    topicList: PropTypes.array,
+    createConvoData: PropTypes.object,  // topicId, topicName, hostUserId, hostUsername, hostViewpoint
+    topicChosenOnly: PropTypes.bool,
+    conversationCreated: PropTypes.bool,
+    conversationStarted: PropTypes.bool,
+    conversationRoute: PropTypes.string,
+    loading: PropTypes.bool,
+    error: PropTypes.object,
 }
 
 const mapStateToProps = state => {
     console.log(`in mapStateToProps. state.createConvo= `, state.createconvo);
     return ({
-        currentUser : state.auth.currentUser,
+        currentUser: state.auth.currentUser,
         loggedIn: state.auth.currentUser !== null,
-        topicList : state.createconvo.topicList,
-        createConvoData : state.createconvo.createConvoData,
-        topicChosenOnly : state.createconvo.topicChosenOnly,
-        conversationCreated : state.createconvo.conversationCreated,
-        conversationStarted : state.createconvo.conversationStarted,
-        conversationRoute : state.createconvo.conversationRoute,
-        loading : state.createconvo.loading,
-        error : state.createconvo.error,
+        topicList: state.createconvo.topicList,
+        createConvoData: state.createconvo.createConvoData,
+        topicChosenOnly: state.createconvo.topicChosenOnly,
+        conversationCreated: state.createconvo.conversationCreated,
+        conversationStarted: state.createconvo.conversationStarted,
+        conversationRoute: state.createconvo.conversationRoute,
+        loading: state.createconvo.loading,
+        error: state.createconvo.error,
     })
 };
 

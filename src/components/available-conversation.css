@@ -4,6 +4,15 @@
 }
 */
 
+.available-conversation-section h2 {
+    margin : 1rem 0 1.5rem;
+    font-size : 18px;
+}
+
+.available-conversation-section .container {
+    padding : 0px;
+}
+
 .available-conversation {
     padding-bottom : 2rem;
     display : grid;
@@ -60,15 +69,16 @@
 .AC-hostViewpoint-short {
     display: inline-block;
     overflow: hidden;
-    padding-left : 5%;
-    width : 85%;
+    padding-left : 10px;
+    width : 95%;
+    max-width : 320px;
     height : 55px;
 }
 
 .AC-hostViewpoint-expand-icon {
     display: inline-block;
-    height : 35px;
-    width : 15%;
+    height : 30px;
+    width : 5%;
 }
 
 .AC-start-conversation-button {

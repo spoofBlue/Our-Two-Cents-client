@@ -1,0 +1,25 @@
+
+.choose-topic-section h2 {
+    margin : 1rem 0 1.5rem;
+    font-size : 18px;
+}
+
+.choose-viewpoint-section h2 {
+    margin : 1rem 0 1.5rem;
+    font-size : 18px;
+}
+
+.waiting-text {
+    margin : 1rem 0 1.5rem;
+    font-size : 18px;
+}
+
+#input-user-viewpoint {
+    min-width : 250px;
+    width : 100%;
+    min-height : 60px;
+}
+
+.cancel-topic-button, .cancel-conversation-button {
+    background-color : lightpink;
+}

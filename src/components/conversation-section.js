@@ -4,13 +4,12 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';  // !!!! use this.props.history instead?
 import { connect } from 'react-redux';
 import PropType from 'prop-types';
+import "./conversation-section.css";
 
 // Actions
 import {
-    enterConversation, processSubmittedMessage, handleChannelEvent, renderMessageList,
-    exitConversation, resetComponent
+    enterConversation, processSubmittedMessage, exitConversation, leaveConversation, resetComponent
 } from '../actions/conversation';
-import { sendbirdInstance } from '../components/App';
 
 // Components
 import ConversationForm from './conversation-form';
@@ -18,7 +17,11 @@ import ConversationBoard from './conversation-board';
 
 export class ConversationSection extends React.Component {
     componentDidMount() {
-        this.props.dispatch(enterConversation(this.props.match.params.conversationId, this.props.currentUser.userId, this.props.messageList));
+        if (this.props.match.params.conversationId && this.props.currentUser && this.props.currentUser.userId) {
+            this.props.dispatch(enterConversation(this.props.match.params.conversationId, this.props.currentUser.userId, this.props.messageList));
+        } else {
+            this.props.dispatch(leaveConversation());
+        }
     }
 
     componentWillUnmount() {
@@ -34,35 +37,20 @@ export class ConversationSection extends React.Component {
         this.props.dispatch(exitConversation(this.props.conversationData));
     }
 
-    chatElement() {
-        //let groupChannel = getSendBirdChannel(channelURL);
-        //this.props.dispatch(handleChannelEvent(this.props.conversationData));
-        return this.props.conversationData.handler;
-    }
-
     render() {
-        console.log(`conversation-section. CURRENT PROPS=`, this.props);
+        console.log(`conversation-section . CURRENT PROPS=`, this.props);
         if (!this.props.loggedIn) {
             return <Redirect to='/login' />;
         }
         if (this.props.leaveConversation) {
             return <Redirect to='/home' />;
         }
-        let conversationFinishedText;
-        if (this.props.conversationFinished) {
-            conversationFinishedText = <h2>{this.props.conversationData.otherPersonUsername} has left the conversation.</h2>;
-        }
-        //  !!!!!!
-        let conversationElement;
-        if (this.props.conversationStarted) {
-            conversationElement = this.chatElement();
-        }
+
         return (
-            <section className="conversation-section">
+            <section className="conversation-section sizeIsPageHeight">
                 <h2>Your conversation with {this.props.conversationData.otherPersonUsername}: {this.props.conversationData.topicName}</h2>
                 <ConversationBoard {...this.props} />
-                {conversationFinishedText}
-                <ConversationForm sendMessage={message => this.sendMessage(message)} />
+                <ConversationForm conversationFinished={this.props.conversationFinished} sendMessage={message => this.sendMessage(message)} />
                 <button className="leave-conversation-button" onClick={() => this.exitConvo()}>Leave Conversation</button>
             </section>
         );

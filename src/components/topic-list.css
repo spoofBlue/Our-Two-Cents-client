@@ -3,6 +3,10 @@
     list-style-type: none;
 }
 
+ul.topic-list {
+    padding-inline-start : 0px;
+}
+
 .topic button {
     min-width : 200px;
     width : 80%;

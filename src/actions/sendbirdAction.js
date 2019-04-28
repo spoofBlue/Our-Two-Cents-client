@@ -160,6 +160,7 @@ class SendBirdAction {
       groupChannel.leave(function (response, error) {
         console.log(`sendbird. leaveSendBirdChannel. response=`, response);
         if (error) {
+          console.log(error);
           return;
         }
       });

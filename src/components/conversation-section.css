@@ -1,0 +1,38 @@
+
+/*
+html, body, #root, .page-container, main {
+    height: 100%;
+}
+*/
+
+.sizeIsPageHeight {
+    height : 100%
+}
+
+.conversation-section, .conversation-board {
+    height : 80%;
+}
+
+.conversation-section h2 {
+    text-align: center;
+}
+
+.conversation-board {
+    background: white;
+    border: 2px black solid;
+    box-shadow: 2px 2px;
+    overflow : scroll;
+}
+
+.conversation-form {
+    padding : 10px;
+}
+
+input #message {
+    width : 90%;
+    max-width : 200px;
+}
+
+.leave-conversation-button {
+    background : lightpink;
+}
