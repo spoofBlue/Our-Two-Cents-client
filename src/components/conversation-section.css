@@ -28,9 +28,11 @@ html, body, #root, .page-container, main {
     padding : 10px;
 }
 
-input #message {
+#input-message {
+    display : block;
+    margin : auto;
     width : 90%;
-    max-width : 200px;
+    max-width : 300px;
 }
 
 .leave-conversation-button {

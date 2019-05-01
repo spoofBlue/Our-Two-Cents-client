@@ -16,3 +16,7 @@ ul.topic-list {
     color : white;
     border-radius : 12px;
 }
+
+li.topic {
+    text-align : center;
+}

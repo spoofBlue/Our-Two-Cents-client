@@ -1,4 +1,8 @@
  
- .image-landing-page {
-     width: 50%;
- }
+.image-landing-page {
+    width: 50%;
+}
+
+ .site-description-item {
+    padding : 0px 10px 10px;
+}

@@ -12,8 +12,8 @@ export class ConversationForm extends React.Component {
     render() {
         return (
             <form className="conversation-form" onSubmit={this.props.handleSubmit(value => this.onSubmit(value))}>
-                <label htmlFor="message">Start your conversation here! Remember our guidelines on keeping conversations civil and informative :)</label>
-                <Field name="message" type="textarea" placeholder="Message..." component={Input} />
+                <label htmlFor="message"> Enjoy your conversation! Remember our guidelines on keeping conversations civil and informative :)</label>
+                <Field name="message" wrap="hard" cols="300" rows="5" maxLength="500" placeholder="Message here..." id="input-message" component="textarea" />
                 <button type="submit" disabled={this.props.conversationFinished} className="submit-message-button">Send</button>
             </form>
         );

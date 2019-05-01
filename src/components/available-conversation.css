@@ -4,6 +4,10 @@
 }
 */
 
+.available-conversation-section {
+    padding : 0px 10px 10px;
+}
+
 .available-conversation-section h2 {
     margin : 1rem 0 1.5rem;
     font-size : 18px;
