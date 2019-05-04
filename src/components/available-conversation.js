@@ -13,23 +13,27 @@ export default function AvailableConvesation(props) {
     function onClick(e) {
         e.preventDefault();
         const availableConversationData = {
-            conversationId : props.conversationId, 
+            conversationId: props.conversationId,
             hostUserId: props.hostUserId,
-            hostUsername : props.hostUsername,
-            topicId : props.topicId, 
-            topicName : props.topicName
+            hostUsername: props.hostUsername,
+            topicId: props.topicId,
+            topicName: props.topicName
         };
         props.startConversation(availableConversationData);
     }
 
     function getInitials(name) {
-        console.log(`${name.substring(0,1)}${name.substring(name.length -2, name.length - 1)}`);
-        return `${name.substring(0,1)}${name.substring(name.length -2, name.length - 1)}`;
+        // Returns the initials of the user.
+        // Assumes the name received is in the form "John S."
+        console.log(`${name.substring(0, 1)}${name.substring(name.length - 2, name.length - 1)}`);
+        return `${name.substring(0, 1)}${name.substring(name.length - 2, name.length - 1)}`;
+        // !!! Can make this update... console.log(${name.substring(0,1)}${name.substring(name.indexOf(" "), name.indexOf(" ") + 1)});
+        // return // ${name.substring(0,1)}${name.substring(name.indexOf(" "), name.indexOf(" ") + 1)};
     }
 
     const popoverHoverFocus = (
-        <Popover id="popover-trigger-hover-focus" title={`${props.topicName} with ${props.hostUsername}`}>
-          <strong>{props.hostViewpoint}</strong>
+        <Popover id="popover-trigger-hover-focus" title={`${props.topicName} with ${props.hostUsername}`} className="">
+            <strong>{props.hostViewpoint}</strong>
         </Popover>
     );
 

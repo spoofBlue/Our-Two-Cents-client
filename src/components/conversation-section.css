@@ -1,16 +1,10 @@
 
-/*
-html, body, #root, .page-container, main {
-    height: 100%;
-}
-*/
-
-.sizeIsPageHeight {
-    height : 100%
+.conversation-section {
+    height : 100%;
 }
 
-.conversation-section, .conversation-board {
-    height : 80%;
+.conversation-board {
+    height : 50%;
 }
 
 .conversation-section h2 {
@@ -37,4 +31,8 @@ html, body, #root, .page-container, main {
 
 .leave-conversation-button {
     background : lightpink;
+}
+
+.currentUserMessage {
+    font-weight : bold;
 }

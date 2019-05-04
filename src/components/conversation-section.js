@@ -47,8 +47,8 @@ export class ConversationSection extends React.Component {
         }
 
         return (
-            <section className="conversation-section sizeIsPageHeight">
-                <h2>Your conversation with {this.props.conversationData.otherPersonUsername}: {this.props.conversationData.topicName}</h2>
+            <section className="conversation-section">
+                <h1>Your conversation with {this.props.conversationData.otherPersonUsername}: {this.props.conversationData.topicName}</h1>
                 <ConversationBoard {...this.props} />
                 <ConversationForm conversationFinished={this.props.conversationFinished} sendMessage={message => this.sendMessage(message)} />
                 <button className="leave-conversation-button" onClick={() => this.exitConvo()}>Leave Conversation</button>

@@ -61,25 +61,31 @@ export class App extends React.Component {
     this.props.dispatch(logout());
   }
 
-  /*
+
   makeElementsPageHeight() {
     let elementsToFillPage = document.getElementsByClassName("notSizeIsPageHeight");
     console.log(`elementsToFillPage= `, elementsToFillPage);
-    for (let i = 0; i < elementsToFillPage.length; i++) {
-      elementsToFillPage[i].classList.remove("notSizeIsPageHeight");
-      elementsToFillPage[i].classList.add("sizeIsPageHeight");
+    console.log(elementsToFillPage.length);
+    if (elementsToFillPage.length) {
+      for (let i = elementsToFillPage.length - 1; i >= 0; i--) {
+        elementsToFillPage[i].classList.add("sizeIsPageHeight");
+        elementsToFillPage[i].classList.remove("notSizeIsPageHeight");
+      }
     }
   }
 
   makeElementsNotPageHeight() {
     let elementsToFillPage = document.getElementsByClassName("sizeIsPageHeight");
     console.log(`elementsToFillPage= `, elementsToFillPage);
-    for (let i = 0; i < elementsToFillPage.length; i++) {
-      elementsToFillPage[i].classList.remove("sizeIsPageHeight");
-      elementsToFillPage[i].classList.add("notSizeIsPageHeight");
+    console.log(elementsToFillPage.length);
+    if (elementsToFillPage.length) {
+      for (let i = elementsToFillPage.length - 1; i >= 0; i--) {
+        elementsToFillPage[i].classList.add("notSizeIsPageHeight");
+        elementsToFillPage[i].classList.remove("sizeIsPageHeight");
+      }
     }
   }
-  */
+
 
   render() {
     console.log(`window.location.pathname= `, window.location.pathname);
@@ -87,11 +93,11 @@ export class App extends React.Component {
     let header;
 
     if (!window.location.pathname.startsWith('/conversation')) {
-      //this.makeElementsNotPageHeight();
+      this.makeElementsNotPageHeight();
       header = <Header onClick={() => this.onLogoutClick()} loggedIn={this.props.loggedIn} />;
       footer = <Footer />;
     } else {
-      //this.makeElementsPageHeight();
+      this.makeElementsPageHeight();
     }
 
     return (

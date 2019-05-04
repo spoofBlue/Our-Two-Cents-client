@@ -9,6 +9,7 @@ class SendBirdAction {
     if (instance) {
       return instance;
     }
+    // Connects this instance to Sendbird, if it isn't already.
     this.SENDBIRD = new SendBird({ appId: APP_ID });
     this.GROUP_CHANNEL = null;
     this.CHANNEL_HANDLER = null;
@@ -19,6 +20,7 @@ class SendBirdAction {
   }
 
   accessSendBird = (userId, username = "Anonymous ?") => {
+    // Initially signs the user into SendBird, allowing this program to utilize SendBird's functionality for the remainder of the session.
     console.log(`sendbird. accessSendBird. userId=`, userId);
     return new Promise(function (resolve, reject) {
       const sb = SendBird.getInstance();
@@ -38,6 +40,8 @@ class SendBirdAction {
   };
 
   createSendBirdChannel = conversationData => {
+    // Given the user's information in conversationData, after both users have agreed to start a conversation, creates a channel
+    // with the user's usernames.
     console.log(`sendbird. createSendBirdChannel`);
     let params = new this.SENDBIRD.GroupChannelParams();
     params.isPublic = false;
@@ -49,9 +53,9 @@ class SendBirdAction {
     ]);
     params.operators = []; //No one will be allowed to ban, mute, or delete comments in the chat.
     params.name = conversationData.topicName;
-    //params.coverImage = FILE;
-    //params.coverUrl = COVER_URL;
-    //params.customType = CUSTOM_TYPE;
+    //params.coverImage = FILE;  // Optional
+    //params.coverUrl = COVER_URL;  // Optional
+    //params.customType = CUSTOM_TYPE;  // Optional
     params.data = {
       hostUsername: conversationData.hostUsername,
       guestUsername: conversationData.guestUsername
@@ -66,6 +70,8 @@ class SendBirdAction {
   };
 
   inviteToSendBirdChannel = (conversationData, channelURL) => {
+    // After channel creation, both users are automatically invited to the channel. Sendbird's channel data now includes both users
+    // as people who can join the channel.
     console.log(`sendbird. inviteToSendBirdChannel. conversationData=`, conversationData);
     let userIds = [conversationData.hostUserId, conversationData.guestUserId];
 
@@ -83,8 +89,9 @@ class SendBirdAction {
   };
 
   setSendBirdChannelPreference = () => {
+    // Simply sets the channel preferences to auto accept users that are invited.
     console.log(`sendbird. setSendBirdChannelPrefernce.`);
-    let autoAccept = true; // If true, a user will automatically join a group channel with no choice of accepting and declining an invitation.
+    let autoAccept = true; // If true, a user will automatically join a group channel with no choice of accepting or declining an invitation.
     return new Promise((resolve, reject) => {
       this.SENDBIRD.setChannelInvitationPreference(autoAccept, function (response, error) {
         console.log(`sendbird. setSendBirdChannelPreference. response=`, response);
@@ -93,8 +100,8 @@ class SendBirdAction {
     });
   };
 
-  // They have a built in function to do this, replace where needed.
   getSendBirdChannel = channelURL => {
+    // Given a string channelURL link, retrieves the channel from SendBird.
     return new Promise((resolve, reject) => {
       this.SENDBIRD.GroupChannel.getChannel(channelURL, function (groupChannel, error) {
         if (error) {
@@ -106,6 +113,7 @@ class SendBirdAction {
   };
 
   createChannelEventHandler = channelId => {
+    // Given a string channelId identifier, retrieves an event handler from SendBird.
     return new Promise((resolve, reject) => {
       console.log(`ran createChannelEventHandler`);
       const handler = new this.SENDBIRD.ChannelHandler();
@@ -119,6 +127,7 @@ class SendBirdAction {
   };
 
   postMessageToChannel = (message, channelURL) => {
+    // Given a string message and a channelURL string, posts the message to the channel corresponding to the channelURL.
     console.log(`sendbird. postMessage. message=`, message);
     return new Promise((resolve, reject) => {
       this.SENDBIRD.GroupChannel.getChannel(channelURL, (groupChannel, error) => {
@@ -133,6 +142,7 @@ class SendBirdAction {
 
   // Add channelURL to relevant callers
   getMessageList = channelURL => {
+    // Given a string channelURL, retrieves the current messageList from SendBird.
     console.log(`in MessageList. channelURL`, channelURL);
     return new Promise((resolve, reject) => {
       this.SENDBIRD.GroupChannel.getChannel(channelURL, function (groupChannel, error) {
@@ -153,8 +163,8 @@ class SendBirdAction {
     });
   };
 
-  // Add channelURL to relevant callers
   leaveSendBirdChannel = channelURL => {
+    // Given a string channelURL, has user leave channel corresponding to the channelURL.
     console.log(`sendbird. leaveSendBirdChannel.`);
     this.SENDBIRD.GroupChannel.getChannel(channelURL, function (groupChannel, error) {
       groupChannel.leave(function (response, error) {
@@ -168,6 +178,7 @@ class SendBirdAction {
   };
 
   exitSendBird = () => {
+    // Disconnects this sendBird instance from the SendBird application.
     console.log(`sendbird. exitSendBird (connection removed, still initialized).`);
     this.SENDBIRD.disconnect();
   };

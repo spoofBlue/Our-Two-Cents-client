@@ -5,8 +5,15 @@ import Message from './message';
 
 export default function ConversationBoard(props) {
     const board = props.messageList.map((message, index) => {
-        props.currentUser.userId === message.sender.userId ? message.myMessage = true : message.myMessage = false;
-        return (<Message message={message} key={index} />);
+        //props.currentUser.userId === message.sender.userId ? message.myMessage = true : message.myMessage = false;
+        // !!! Can remove this once I verify the message.js adequetly boldens message. lol tryhard.
+        let messageOwner;
+        if (props.currentUser.userId === message.sender.userId) {
+            messageOwner = "currentUserMessage";
+        } else {
+            messageOwner = "otherUserMessage";
+        }
+        return (<Message message={message} className={messageOwner} key={index} />);
     });
     let conversationStartedText;
     let conversationFinishedText;

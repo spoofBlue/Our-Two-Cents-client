@@ -1,8 +1,11 @@
 
+* {
+    box-sizing : border-box;
+}
+
 html {
     height : 100%;
     margin : 0;
-    box-sizing : border-box;
 }
 
 .background {
@@ -48,6 +51,10 @@ a {
     color : blue;
 }
 
+.sizeIsPageHeight {
+    height : 100%
+}
+
 .form-error {
     display : inline;
     color : darkred;
@@ -86,4 +93,6 @@ a {
 input[type="text"], input[type="email"], input[type="password"] {
     text-align: left;
     padding : 0px 10px;
+    height: 3rem;
+    min-width: 200px;
 }
