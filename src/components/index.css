@@ -93,6 +93,6 @@ a {
 input[type="text"], input[type="email"], input[type="password"] {
     text-align: left;
     padding : 0px 10px;
-    height: 3rem;
+    height: 2rem;
     min-width: 200px;
 }

@@ -27,7 +27,7 @@ export default function LandingPageSection() {
                 <p className="item-three-text">Connect with others for a 1-on-1 discussion on hot-button issues and reach a better understanding.
                 Hear their two cents on Our Two Cents today.</p>
             </div>
-            <Link to="./login">Continue Into the Site</Link>
+            <Link className="landing-page-continue-to-login-link" to="./login">Continue Into the Site</Link>
         </section>
     );
 }
