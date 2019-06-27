@@ -51,9 +51,7 @@ export default function DropdownMenu(props) {
 
   return (
     <div id="dropdown-menu">
-      <button title="Dropdown Menu" className="header-hamburger-menu">
-        <span className="hidden" />
-      </button>
+      <button title="Dropdown Menu" className="header-hamburger-menu"></button>
       <nav role="navigation" className="dropdown-content">
         <ul>
           {loginMenuitem}
