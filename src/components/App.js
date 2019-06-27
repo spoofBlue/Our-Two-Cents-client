@@ -112,7 +112,7 @@ export class App extends React.Component {
             <Route exact path="/home" component={AvailableConversationSection} />
             <Route exact path="/create-conversation" component={CreateConversationSection} />
             <Route exact path="/conversation/:conversationId" component={ConversationSection} />
-            <Route render={function () { return <p>This route doesn't exist, you can start at the <Link to="/home">home page</Link>.</p> }} />
+            <Route render={function () { return <p className="incorrect-route-message">This route doesn't exist, you can start at the <Link to="/home">home page</Link>.</p> }} />
           </Switch>
         </main>
         <div className="background"></div>

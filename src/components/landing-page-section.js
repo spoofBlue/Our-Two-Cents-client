@@ -20,8 +20,8 @@ export default function LandingPageSection() {
             <img src={imagePersonOne} alt="Person-One" className="image-landing-page" />
             <img src={imagePersonTwo} alt="Person-Two" className="image-landing-page" />
             <div className="site-description-item site-description-item-two">
-                <p className="item-one-text">Ever wonder how some people hold such different opinions? Wish you could understand the perspective
-                of others better?</p>
+                <p className="item-one-text">Ever wonder how some people hold such different opinions? Wish you could understand 
+                their perspective better?</p>
             </div>
             <img src={imagePersonThree} alt="Person-Three" className="image-landing-page" />
             <img src={imagePersonFour} alt="Person-Four" className="image-landing-page" />

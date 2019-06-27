@@ -101,3 +101,9 @@ input[type="text"], input[type="email"], input[type="password"] {
     color : red;
     font-weight : bold;
 }
+
+.incorrect-route-message {
+    margin : 10px;
+    font-weight: 1000;
+    font-size: 2rem;
+}

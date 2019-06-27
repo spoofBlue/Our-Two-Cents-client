@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import "./index.css";
 import "./dropdown-menu.css";
@@ -10,15 +10,22 @@ export default function DropdownMenu(props) {
   let createConversationMenuitem;
   let loginMenuitem;
   let createAccountMenuitem;
+
+  let landingPageMenuItem = (
+    <li>
+      <Link to="/landing-page">About Our Site</Link>
+    </li>
+  );
+
   if (props.loggedIn) {
     availableConversationMenuitem = (
       <li>
-        <a href="./home">See Available Conversations</a>
+        <Link to="/home">See Available Conversations</Link>
       </li>
     );
     createConversationMenuitem = (
       <li>
-        <a href="./create-conversation">Create Conversation</a>
+        <Link to="/create-conversation">Create Conversation</Link>
       </li>
     );
     logoutMenuitem = (
@@ -35,16 +42,12 @@ export default function DropdownMenu(props) {
   } else {
     loginMenuitem = (
       <li>
-        <a className="header-login-menuitem" href="./login">
-          <span>Login</span>
-        </a>
+        <Link to="/login">Login</Link>
       </li>
     );
     createAccountMenuitem = (
       <li>
-        <a className="create-account-menuitem" href="./create-account">
-          <span>Create Your Account</span>
-        </a>
+        <Link to="/create-account">Create Your Account</Link>
       </li>
     );
   }
@@ -58,11 +61,7 @@ export default function DropdownMenu(props) {
           {createAccountMenuitem}
           {availableConversationMenuitem}
           {createConversationMenuitem}
-          <li>
-            <a className="header-login-menuitem" href="./landing-page">
-              <span>About Our Site</span>
-            </a>
-          </li>
+          {landingPageMenuItem}
           {logoutMenuitem}
         </ul>
       </nav>

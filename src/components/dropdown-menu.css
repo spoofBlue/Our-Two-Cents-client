@@ -1,15 +1,16 @@
 
-
+/*
 #dropdown-menu {
-    position : absolute; /*   Note, is dependent on parent .header being relative */
-    top : 15px;
-    right : 15px;
+    
 }
+*/
 
 .dropdown-content {
-    position: relative;
-    right: 0px;
+    position: absolute;  /* Note, is dependent on parent .header being relative */
+    right: 10px;
     display : none;
+
+    width : 200px;
     border : 1px solid white;
 
     z-index: 1;
@@ -24,7 +25,7 @@
     text-align: center;
     background-color : #337ab7;
     list-style-type: none;
-    border : 3px solid white;
+    border : 1px solid white;
     display : block;
     text-decoration: none;
 }
@@ -32,12 +33,18 @@
 .dropdown-content a {
     color: white;
     text-align: center;
+
+    font-weight : 1000px;
     padding : 20px 10px;
     display : block;
     text-decoration: none;
 }
 
 .header-hamburger-menu {
+    position : absolute;   /* Note, is dependent on parent .header being relative */
+    top : 15px;
+    right : 15px;
+
     background-image : url('../images/menu.png');
     background-repeat : no-repeat;
     background-size : cover;
