@@ -10,17 +10,13 @@ export const initializeSendBird = () => {
 };
 
 export const accessSendBird = (userId, username = "Anonymous ?") => {
-  console.log(`sendbird. accessSendBird. userId=`, userId);
-  SENDBIRD.connect(userId, function(user, error) {
-    console.log(`sendbird. accessSendBird user=`, user);
+  SENDBIRD.connect(userId, function (user, error) {
     const nickname = username;
     if (error) {
-      console.log(`sendbird. accessSendBird. error=`, error);
       return;
     } else {
       SENDBIRD.updateCurrentUserInfo(nickname, null, (user, error) => {
         if (error) {
-          console.log(`sendbird. accessSendBird. error=`, error);
           return;
         }
         return user;
@@ -30,7 +26,6 @@ export const accessSendBird = (userId, username = "Anonymous ?") => {
 };
 
 export const createSendBirdChannel = conversationData => {
-  console.log(`sendbird. createSendBirdChannel`);
   let params = new SENDBIRD.GroupChannelParams();
   params.isPublic = false;
   params.isEphemeral = false;
@@ -50,11 +45,7 @@ export const createSendBirdChannel = conversationData => {
   };
 
   return new Promise((resolve, reject) => {
-    SENDBIRD.GroupChannel.createChannel(params, function(groupChannel, error) {
-      console.log(
-        `sendbird. createSendBirdChannel groupChannel=`,
-        groupChannel
-      );
+    SENDBIRD.GroupChannel.createChannel(params, function (groupChannel, error) {
       GROUP_CHANNEL = groupChannel;
       error ? reject(error) : resolve(groupChannel);
     });
@@ -62,61 +53,35 @@ export const createSendBirdChannel = conversationData => {
 };
 
 export const inviteToSendBirdChannel = conversationData => {
-  console.log(
-    `sendbird. inviteToSendBirdChannel. conversationData=`,
-    conversationData
-  );
   // Do after createSendBirdChannel
   let userIds = [conversationData.hostUserId, conversationData.guestUserId];
 
   return new Promise((resolve, reject) => {
-    GROUP_CHANNEL.inviteWithUserIds(userIds, function(response, error) {
-      console.log(`sendbird. inviteToSendBirdChannel. response=`, response);
+    GROUP_CHANNEL.inviteWithUserIds(userIds, function (response, error) {
       error ? reject(error) : resolve(response);
     });
   });
 };
 
 export const setSendBirdChannelPreference = () => {
-  console.log(`sendbird. setSendBirdChannelPrefernce.`);
   let autoAccept = true; // If true, a user will automatically join a group channel with no choice of accepting and declining an invitation.
   return new Promise((resolve, reject) => {
-    SENDBIRD.setChannelInvitationPreference(autoAccept, function(
+    SENDBIRD.setChannelInvitationPreference(autoAccept, function (
       response,
       error
     ) {
-      console.log(
-        `sendbird. setSendBirdChannelPreference. response=`,
-        response
-      );
       error ? reject(error) : resolve(response);
     });
   });
 };
 
-// This function may not be necessary, as the Invitation Preference is set to autoAccept users.
-/*
-export const acceptInviteToSendBirdChannel = () => {
-    console.log(`sendbird. acceptInviteToSendBirdChannel.`);
-    // Auto-accepting an invitation
-    return new Promise((resolve, reject) => {
-        GROUP_CHANNEL.acceptInvitation(function(response, error) {
-            console.log(`sendbird. acceptInviteToSendBirdChannel. response=`, response);
-            error ? reject(error) : resolve(response);
-        });
-    });
-}
-*/
-
 export const getSendBirdChannel = channelURL => {
   return new Promise((resolve, reject) => {
-    SENDBIRD.GroupChannel.getChannel(channelURL, function(groupChannel, error) {
+    SENDBIRD.GroupChannel.getChannel(channelURL, function (groupChannel, error) {
       if (error) {
         return;
       }
       GROUP_CHANNEL = groupChannel;
-      console.log(`after getSendBirdChannel. GROUP_CHANNEL=`, GROUP_CHANNEL);
-      console.log(`after getSendBirdChannel. error=`, error);
       error ? reject(error) : resolve(groupChannel);
     });
   });
@@ -124,7 +89,6 @@ export const getSendBirdChannel = channelURL => {
 
 export const createChannelEventHandler = channelId => {
   return new Promise((resolve, reject) => {
-    console.log(`ran createChannelEventHandler`);
     CHANNEL_HANDLER = new SENDBIRD.ChannelHandler();
     /*
         CHANNEL_HANDLER.onMessageReceived = (channel, message) => {
@@ -161,30 +125,21 @@ export const removeChannelHandler = channelId => {
 
 export const postMessageToChannel = (message, username) => {
   // !!! Currently not using username.
-  console.log(`sendbird. postMessage. message=`, message);
-  console.log(`sendbird. postMessage. username=`, username);
   return new Promise((resolve, reject) => {
-    GROUP_CHANNEL.sendUserMessage(message.message, function(message, error) {
-      //handler(message, error)
-      console.log(
-        `sendbird. postMessage after sendUserMessage. message=`,
-        message
-      );
+    GROUP_CHANNEL.sendUserMessage(message.message, function (message, error) {
       console.log(`sendbird. postMessage after sendUserMessage. error=`, error);
       error ? reject(error) : resolve(message);
     });
   });
 };
 
-export const addMessageToList = (messageList, message) => {};
+export const addMessageToList = (messageList, message) => { };
 
 export const getMessageList = () => {
-  console.log(`in MessageList. CHANNEL_HANDLER`, CHANNEL_HANDLER);
   return new Promise((resolve, reject) => {
     if (!GROUP_CHANNEL.previousMessageQuery) {
       GROUP_CHANNEL.previousMessageQuery = GROUP_CHANNEL.createPreviousMessageListQuery();
     }
-    console.log(`in getMessageList. GROUP_CHANNEL=`, GROUP_CHANNEL);
     if (
       GROUP_CHANNEL.previousMessageQuery.hasMore &&
       !GROUP_CHANNEL.previousMessageQuery.isLoading
@@ -193,7 +148,6 @@ export const getMessageList = () => {
         50,
         false,
         (messageList, error) => {
-          console.log(`sendbird. getMessageList. messageList=`, messageList);
           error ? reject(error) : resolve(messageList);
         }
       );
@@ -204,7 +158,7 @@ export const getMessageList = () => {
 };
 
 export const messageRecievedEvent = () => {
-  CHANNEL_HANDLER.onMessageReceived(function(channel, message) {
+  CHANNEL_HANDLER.onMessageReceived(function (channel, message) {
     console.log(`sendbird. messageReceivedEvent. channel=`, channel);
     console.log(`sendbird. messageReceivedEvent. channel=`, message);
     //return message;
@@ -212,10 +166,8 @@ export const messageRecievedEvent = () => {
 };
 
 export const leaveSendBirdChannel = () => {
-  console.log(`sendbird. leaveSendBirdChannel.`);
   if (GROUP_CHANNEL) {
-    GROUP_CHANNEL.leave(function(response, error) {
-      console.log(`sendbird. leaveSendBirdChannel. response=`, response);
+    GROUP_CHANNEL.leave(function (response, error) {
       if (error) {
         return;
       }
@@ -224,8 +176,5 @@ export const leaveSendBirdChannel = () => {
 };
 
 export const exitSendBird = () => {
-  console.log(
-    `sendbird. exitSendBird (connection removed, still initialized).`
-  );
   SENDBIRD.disconnect();
 };

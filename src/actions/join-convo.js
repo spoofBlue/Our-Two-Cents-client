@@ -1,7 +1,7 @@
 
-import {API_BASE_URL} from '../config';
-import {normalizeResponseErrors} from './utils';
-import {createSendBirdChannel, setSendBirdChannelPreference, inviteToSendBirdChannel } from './sendbird';
+import { API_BASE_URL } from '../config';
+import { normalizeResponseErrors } from './utils';
+import { createSendBirdChannel, setSendBirdChannelPreference, inviteToSendBirdChannel } from './sendbird';
 
 //import {sendbirdInstance} from '../components/App';
 import SendBirdAction from './sendbirdAction';
@@ -19,73 +19,68 @@ import SendBirdAction from './sendbirdAction';
 // Actions
 export const DISPLAY_LOADING = `DISPLAY_LOADING`;
 export const displayLoading = () => ({
-    type : DISPLAY_LOADING,
+    type: DISPLAY_LOADING,
 });
 
 export const MOVE_TO_CONVERSATION = `MOVE_TO_CONVERSATION`;
 export const moveToConversation = (conversationId) => ({
-    type : MOVE_TO_CONVERSATION,
+    type: MOVE_TO_CONVERSATION,
     conversationId
 });
 
 export const DISPLAY_ERROR = `DISPLAY_ERROR`;
 export const displayError = status => ({
-    type : DISPLAY_ERROR,
-    error : status.error
+    type: DISPLAY_ERROR,
+    error: status.error
 });
 
 export const DISPLAY_AVAILABLE_CONVERSATIONS_LIST = `DISPLAY_AVAILABLE_CONVERSATIONS_LIST`;
 export const displayAvailableConversationsList = (conversationList) => ({
-    type : DISPLAY_AVAILABLE_CONVERSATIONS_LIST,
+    type: DISPLAY_AVAILABLE_CONVERSATIONS_LIST,
     conversationList
 });
 
 export const RESET_COMPONENT = `RESET_COMPONENT`;
 export const resetComponent = () => ({
-    type : RESET_COMPONENT
+    type: RESET_COMPONENT
 });
 
 export const getAvailableConversationsList = () => dispatch => {
     // Retrieves the availableConversations with the status = 'available'.
-    console.log(`run getAvailableConversationList`);
     fetch(`${API_BASE_URL}/api/availableConversations`, {
-        method : 'GET'
+        method: 'GET'
     })
-    .then(res => normalizeResponseErrors(res))
-    .then(res => res.json())
-    .then(conversationList => {
-        console.log(`getAvailableConversationList. conversationList=`, conversationList);
-        dispatch(displayAvailableConversationsList(conversationList));
-    })
-    .catch(err => {
-        console.log(`getAvailableConversationList. err=`, err);
-    });
+        .then(res => normalizeResponseErrors(res))
+        .then(res => res.json())
+        .then(conversationList => {
+            dispatch(displayAvailableConversationsList(conversationList));
+        })
+        .catch(err => {
+            console.log(`getAvailableConversationList. err=`, err);
+        });
 };
 
 export const prepareConversation = (conversationId, userId, username) => dispatch => {
     // Central function to verify conversation is still available, success means user 
     // ConversationData should have conversationId, hostUserId, hostUsername, topicId, topicName.
     dispatch(displayLoading());
-    console.log(`ran prepareConversation. conversationId=`, conversationId);
     checkConversationAvailability(conversationId)
-    .then(res => {
-        console.log(`prepareconversation. res=`, res);
-        if (res.status === `unavailable`) {
-            dispatch(getAvailableConversationsList());
-        } else if (res.status === `joined` && verifyHaveConversationData(res)) {
-            const conversationData = combineConversationData(res, userId, username);
-            console.log('prepareConversation. in joined. conversationData=', conversationData);
-            dispatch(startConversation(conversationData));
-        } else {
-            console.log(`prepareConversation. res=`, res);
-            if (res.error) {
-                dispatch(displayError(res.error));
+        .then(res => {
+            console.log(`prepareconversation. res=`, res);
+            if (res.status === `unavailable`) {
+                dispatch(getAvailableConversationsList());
+            } else if (res.status === `joined` && verifyHaveConversationData(res)) {
+                const conversationData = combineConversationData(res, userId, username);
+                dispatch(startConversation(conversationData));
+            } else {
+                if (res.error) {
+                    dispatch(displayError(res.error));
+                }
             }
-        }
-    })
-    .catch(err => {
-        console.log(`prepareconversation. err=`, err);
-    });
+        })
+        .catch(err => {
+            console.log(`prepareconversation. err=`, err);
+        });
 };
 
 const checkConversationAvailability = (conversationId) => {
@@ -93,29 +88,28 @@ const checkConversationAvailability = (conversationId) => {
     // if that the status was not 'available' when making the request, we receive that notification too.
     return (
         fetch(`${API_BASE_URL}/api/availableConversations/${conversationId}`, {
-            method : 'PUT',
-            headers : {
-                'Content-Type' : 'application/json'
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
             },
-            body : JSON.stringify({
-                conversationId : conversationId,
-                status : 'joined'
+            body: JSON.stringify({
+                conversationId: conversationId,
+                status: 'joined'
             })
         })
-        .then(res => normalizeResponseErrors(res))
-        .then(res => res.json())
-        .then(res => {
-            console.log(`checkConvesationAvailablitliy. res=`, res);
-            return res;
-        })
-        .catch(err => {
-            console.log(err);
-        })
+            .then(res => normalizeResponseErrors(res))
+            .then(res => res.json())
+            .then(res => {
+                return res;
+            })
+            .catch(err => {
+                console.log(err);
+            })
     );
 };
 
 const verifyHaveConversationData = res => {
-    const keys = [`conversationId`,`hostUserId`,`hostUsername`,`topicId`,`topicName`,`status`];
+    const keys = [`conversationId`, `hostUserId`, `hostUsername`, `topicId`, `topicName`, `status`];
     keys.forEach(key => {
         if (!res.hasOwnProperty(key)) {
             return false;
@@ -126,42 +120,39 @@ const verifyHaveConversationData = res => {
 
 const combineConversationData = (res, userId, username) => ({
     // Explicityly showing each field here shouldn't be necessary to just add userId, username. Done more for code onlookers to know what's here.
-    conversationId : res.conversationId,
-    hostUserId : res.hostUserId,
-    hostUsername : res.hostUsername,
-    guestUserId : userId,
-    guestUsername : username,
-    topicId : res.topicId,
-    topicName : res.topicName
+    conversationId: res.conversationId,
+    hostUserId: res.hostUserId,
+    hostUsername: res.hostUsername,
+    guestUserId: userId,
+    guestUsername: username,
+    topicId: res.topicId,
+    topicName: res.topicName
 });
 
 const startConversation = (conversationData) => dispatch => {
     const sendbirdInstance = SendBirdAction.getInstance();
     let channelURL;
-    console.log(`startConversation. sendbirdInstance=`, sendbirdInstance);
-    let establishChannelCreation = new Promise(function(resolve, reject) {
+    let establishChannelCreation = new Promise(function (resolve, reject) {
         sendbirdInstance.createSendBirdChannel(conversationData)
-        .then(groupChannel => {
-            channelURL = groupChannel.url;
-            console.log(channelURL);
-            resolve();
-        })
-        .catch(err => dispatch(displayError(err)));
+            .then(groupChannel => {
+                channelURL = groupChannel.url;
+
+                resolve();
+            })
+            .catch(err => dispatch(displayError(err)));
         // !!! expecting something like sendbird_group_channel_82716964_9be546b931d38f17153242db77c2456460de341b
     });
 
     return establishChannelCreation
-    .then(() => postConversationDataToServer(conversationData, channelURL))
-    .then(() => sendbirdInstance.setSendBirdChannelPreference())
-    .then(() => sendbirdInstance.inviteToSendBirdChannel(conversationData, channelURL))
-    .then(() => {
-        console.log(`in startConversation. create, invite channel complete.`);
-        dispatch(moveToConversation(conversationData.conversationId));
-    })
-    .catch(err => {
-        console.log(`startConversation. err=`, err);
-        dispatch(displayError(err));
-    });
+        .then(() => postConversationDataToServer(conversationData, channelURL))
+        .then(() => sendbirdInstance.setSendBirdChannelPreference())
+        .then(() => sendbirdInstance.inviteToSendBirdChannel(conversationData, channelURL))
+        .then(() => {
+            dispatch(moveToConversation(conversationData.conversationId));
+        })
+        .catch(err => {
+            dispatch(displayError(err));
+        });
 };
 
 const postConversationDataToServer = (conversationData, channelURL) => {
@@ -169,29 +160,27 @@ const postConversationDataToServer = (conversationData, channelURL) => {
     // We store this link in the conversation POST.
     console.log(`postConversationDataToSErver. channelURL=`, channelURL);
     return fetch(`${API_BASE_URL}/api/conversations/`, {
-        method : 'POST',
-        headers : {
-            'Content-Type' : 'application/json'
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
         },
-        body : JSON.stringify({
-            conversationId : conversationData.conversationId,
-            channelURL : channelURL,
-            hostUserId : conversationData.hostUserId,
-            hostUsername : conversationData.hostUsername,
-            guestUserId : conversationData.guestUserId,
-            guestUsername : conversationData.guestUsername,
-            topicId : conversationData.topicId,
-            topicName : conversationData.topicName
+        body: JSON.stringify({
+            conversationId: conversationData.conversationId,
+            channelURL: channelURL,
+            hostUserId: conversationData.hostUserId,
+            hostUsername: conversationData.hostUsername,
+            guestUserId: conversationData.guestUserId,
+            guestUsername: conversationData.guestUsername,
+            topicId: conversationData.topicId,
+            topicName: conversationData.topicName
         })
     })
-    .then(res => normalizeResponseErrors(res))
-    .then(res => res.json())
-    .then(res => {
-        console.log(`postConversationDataToServer. res=`, res);
-        return res;
-    })
-    .catch(err => {
-        console.log(`postConversationDataToServer. err=`, err);
-        return err;
-    });
+        .then(res => normalizeResponseErrors(res))
+        .then(res => res.json())
+        .then(res => {
+            return res;
+        })
+        .catch(err => {
+            return err;
+        });
 }

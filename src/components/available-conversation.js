@@ -2,7 +2,6 @@
 // Libraries
 import React from 'react';
 import Button from 'react-bootstrap/lib/Button';
-import Modal from 'react-bootstrap/lib/Modal';
 import Col from 'react-bootstrap/lib/Col';
 import Popover from 'react-bootstrap/lib/Popover';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
@@ -23,8 +22,7 @@ export default function AvailableConvesation(props) {
     }
 
     function getInitials(name) {
-        // Returns the initials of the user.
-        // Assumes the name received is in the form "John S."
+        // Returns the initials of the user.  Assumes the name received is in the form "John S."
         console.log(`${name.substring(0, 1)}${name.substring(name.length - 2, name.length - 1)}`);
         return `${name.substring(0, 1)}${name.substring(name.length - 2, name.length - 1)}`;
         // !!! Can make this update... console.log(${name.substring(0,1)}${name.substring(name.indexOf(" "), name.indexOf(" ") + 1)});
@@ -47,7 +45,6 @@ export default function AvailableConvesation(props) {
                         <div>
                             <p className="AC-hostViewpoint-short">{props.hostViewpoint}</p>
                             <p className="AC-hostViewpoint-expand-icon">></p>
-                            {/*<img className="AC-hostViewpoint-expand-icon" src="../images/next.png" alt=">" />*/}
                         </div>
                     </OverlayTrigger>
                 </div>
@@ -58,9 +55,3 @@ export default function AvailableConvesation(props) {
         </Col>
     );
 }
-
-
-/*
-<button name="button" className="AC-hostViewpoint-expand-icon" value=""><img src="../src/images/next.png" alt=">" /></button>
-<input type="image" className="AC-hostViewpoint-expand-icon" src="../images/next.png" alt=">" />
-*/

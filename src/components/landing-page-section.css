@@ -3,11 +3,8 @@
     width: 50%;
 }
 
- .site-description-item {
-    padding : 0px 10px 10px;
-}
-
-.site-description-item {
+.landing-page-section p {
+    font-weight : 1000;
     text-align: center;
     margin : 10px;
 }

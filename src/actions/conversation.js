@@ -64,28 +64,21 @@ export const enterConversation = (conversationId, userId) => dispatch => {
     return getConversation
         .then(res => {
             conversationData = interpretConversationData(res, userId);
-            console.log(`enterConversation. getConversation's conversationData=`, conversationData);
             return sendbirdInstance.getSendBirdChannel(conversationData.channelURL);
         })
         .then(groupChannel => {
-            console.log(`enterConversation. groupChannel=`, groupChannel);
             let channelId = `${conversationData.conversationId}-${conversationData.userId}`;
             return sendbirdInstance.createChannelEventHandler(channelId);
         })
         .then(eventHandler => {
             handler = eventHandler;
-            console.log(`in chatElemet. channel's handler=`, handler);
             return sendbirdInstance.getMessageList(conversationData.channelURL);
         })
         .then(messageList => {
-            console.log(`in chatElemet. channel's messageList=`, messageList);
             handler.onMessageReceived = (channel, message) => {
-                console.log(`in chatElemet. channel=`, channel);
-                console.log(`in chatElemet. message=`, message);
                 dispatch(renderMessageList(messageList, message));
             }
             handler.onUserLeft = (channel, user) => {
-                console.log(`${user} left.`);
                 dispatch(displayConversationFinished());
             };
 
@@ -95,7 +88,6 @@ export const enterConversation = (conversationId, userId) => dispatch => {
             dispatch(renderMessageList(messageList));
         })
         .catch(err => {
-            console.log(`enterConversation. err=`, err);
             dispatch(displayError(err));
         });
 }
@@ -107,11 +99,9 @@ const getConversationDataFromServer = (conversationId) => {
         .then(res => normalizeResponseErrors(res))
         .then(res => res.json())
         .then(res => {
-            console.log(`getConversationDataFromServer. res=`, res);
             return res;
         })
         .catch(err => {
-            console.log(`getConversationDataFromServer. err=`, err);
             return err;
         });
 }
@@ -141,7 +131,6 @@ export const exitConversation = (conversationData) => dispatch => {
     closeEventHandler
         .then(() => sendbirdInstance.removeChannelHandler(conversationData.channelURL))
         .then(() => {
-            console.log("exit conversation.");
             dispatch(displayConversationFinished());
             dispatch(leaveConversation());
         })
@@ -162,11 +151,9 @@ export const processSubmittedMessage = (message, conversationData, messageList) 
 
     return posting
         .then(() => {
-            console.log(`in processSubmittedMessage after postMessageToChannel.`);
             return sendbirdInstance.getSendBirdChannel(conversationData.channelURL);
         })
         .then(groupChannel => {
-            console.log(`processSubmittedMessage. lastMessage=`, groupChannel.lastMessage);
             let message = groupChannel.lastMessage;
             dispatch(renderMessageList(messageList, message));
         })
@@ -176,10 +163,8 @@ export const processSubmittedMessage = (message, conversationData, messageList) 
 };
 
 export const renderMessageList = (messageList = [], message) => dispatch => {
-    console.log('in renderMessageList. message=', message);
     if (message) {
         messageList.push(message);
     }
-    console.log(`in renderMessageList. newMessageList=`, messageList);
     dispatch(displayMessageList(messageList));
 }

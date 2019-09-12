@@ -17,9 +17,9 @@ export function LoginSection(props) {
     }
     return (
         <section className="login-section">
-            <h2>Sign In to your account.</h2>
+            <h2>Sign In here.</h2>
             <LoginForm />
-            <Link to="./create-account">Or sign up to create your account...</Link>
+            <Link className="create-account-from-login-page-link" to="./create-account">Or sign up to create your account...</Link>
         </section>
     );
 }

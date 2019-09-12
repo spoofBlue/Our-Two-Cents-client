@@ -64,8 +64,6 @@ export class App extends React.Component {
 
   makeElementsPageHeight() {
     let elementsToFillPage = document.getElementsByClassName("notSizeIsPageHeight");
-    console.log(`elementsToFillPage= `, elementsToFillPage);
-    console.log(elementsToFillPage.length);
     if (elementsToFillPage.length) {
       for (let i = elementsToFillPage.length - 1; i >= 0; i--) {
         elementsToFillPage[i].classList.add("sizeIsPageHeight");
@@ -76,8 +74,6 @@ export class App extends React.Component {
 
   makeElementsNotPageHeight() {
     let elementsToFillPage = document.getElementsByClassName("sizeIsPageHeight");
-    console.log(`elementsToFillPage= `, elementsToFillPage);
-    console.log(elementsToFillPage.length);
     if (elementsToFillPage.length) {
       for (let i = elementsToFillPage.length - 1; i >= 0; i--) {
         elementsToFillPage[i].classList.add("notSizeIsPageHeight");
@@ -88,7 +84,6 @@ export class App extends React.Component {
 
 
   render() {
-    console.log(`window.location.pathname= `, window.location.pathname);
     let footer;
     let header;
 

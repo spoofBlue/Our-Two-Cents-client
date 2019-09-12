@@ -1,14 +1,8 @@
 
-/*
-#dropdown-menu {
-    
-}
-*/
-
 .dropdown-content {
     position: absolute;  /* Note, is dependent on parent .header being relative */
     right: 10px;
-    display : none;
+    visibility : hidden;
 
     width : 200px;
     border : 1px solid white;
@@ -55,6 +49,22 @@
     text-align : right;
 }
 
+.dropdown-content {
+    border : 1px solid red;
+    -webkit-transition: .5s all;
+    -webkit-transition-delay: .5s;
+    -moz-transition-delay: .5s;
+    -ms-transition-delay: .5s;
+    -o-transition-delay: .5s;
+    transition-delay: .5s;   /* After making media query, there will be no transition delay here, but non-touch screens will have delay */
+}
+
 #dropdown-menu:hover .dropdown-content {
-    display: block;
+    visibility: visible;
+    border : 1px solid black;
+    -webkit-transition-delay: 0s;
+    -moz-transition-delay: 0s;
+    -ms-transition-delay: 0s;
+    -o-transition-delay: 0s;
+    transition-delay: 0s;
 }

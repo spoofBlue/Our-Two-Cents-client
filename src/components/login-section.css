@@ -2,7 +2,6 @@
 .login-section {
     width : 300px;
     margin : 0 auto;
-    padding : 0 10px 10px;
     position: absolute;
     top: 40%;
     left: 50%;
@@ -14,6 +13,18 @@
     border: 1px solid #999; 
     border-radius: 6px;
     outline: 0;
+}
+
+.login-section h2 {
+    margin-left : 10px;
+}
+
+.login-section #login-form {
+    margin-left : 20px;
+}
+
+.login-section .create-account-from-login-page-link {
+    margin : 0px 0px 10px 10px;
 }
 
 .form-input {
